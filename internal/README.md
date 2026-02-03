@@ -1,21 +1,16 @@
-# `/internal`
+# internal
 
-Private application and library code. This is the code you don't want others importing in their applications or libraries. Note that this layout pattern is enforced by the Go compiler itself. See the Go 1.4 [`release notes`](https://golang.org/doc/go1.4#internalpackages) for more details. Note that you are not limited to the top level `internal` directory. You can have more than one `internal` directory at any level of your project tree.
+Contains application business logic and private packages not intended for external consumption.
 
-You can optionally add a bit of extra structure to your internal packages to separate your shared and non-shared internal code. It's not required (especially for smaller projects), but it's nice to have visual clues showing the intended package use. Your actual application code can go in the `/internal/app` directory (e.g., `/internal/app/myapp`) and the code shared by those apps in the `/internal/pkg` directory (e.g., `/internal/pkg/myprivlib`).
+Guidelines
 
-Examples:
+- Keep APIs small and focused.
+- No public export from `internal` for external modules to use.
+- Prefer small, testable packages with clear responsibilities.
+- Avoid framework lock-in in core logic; adaptors/handlers should live elsewhere.
 
-* https://github.com/hashicorp/terraform/tree/main/internal
-* https://github.com/influxdata/influxdb/tree/master/internal
-* https://github.com/perkeep/perkeep/tree/master/internal
-* https://github.com/jaegertracing/jaeger/tree/main/internal
-* https://github.com/moby/moby/tree/master/internal
-* https://github.com/satellity/satellity/tree/main/internal
-* https://github.com/minio/minio/tree/master/internal
+Testing
 
-## `/internal/pkg`
+- Add unit tests for behavior; integration tests may live outside `internal`.
 
-Examples:
-
-* https://github.com/hashicorp/waypoint/tree/main/internal/pkg
+This file intentionally remains brief and leaves implementation details to the code.
