@@ -1,30 +1,14 @@
-package database
+package db
 
 import (
 	"encoding/json"
-	"time"
 	"github.com/f18charles/expense-tracker/internal/models"
+	"io/ioutil"
+	"time"
 )
 
-const UserFile = "users.json"
+// auth
+func AddUser(name, email, password string) (string, error) {
 
-func SaveUser(u models.User) error {
-	users,_ LoadAllUsers()
-	users = append(users, u)
-
-	data, err := json.MarshalIndent(users, "", "  ")
-	if err != nil {
-		return err
-	}
-	return os.WriteFile(UserFile, data, 0644)
-}
-
-func LoadAllUsers() ([]models.User, error) {
-	data, err := os.ReadFile(UserFile)
-	if err != nil {
-		return []models.User{}, nil
-	}
-	var users []models.User
-	err = json.Unmarshal(data, &users)
-	return users,err
+	return "", nil
 }
