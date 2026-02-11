@@ -1,10 +1,11 @@
-package db
+package database
 
 import (
+	"gorm.io/gorm"
+	"github.com/f18charles/expense-tracker/internal/models"
 )
 
-// auth
-func AddUser(name, email, password string) (string, error) {
-
-	return "", nil
+func Migrate(db *gorm.DB) {
+	db.AutoMigrate(&models.User{}, &models.Transaction{})
 }
+

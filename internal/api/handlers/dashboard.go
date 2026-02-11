@@ -1,8 +1,8 @@
 package handlers
 
 import (
+	utils "github.com/f18charles/expense-tracker/internal/utils"
 	"net/http"
-	utils"github.com/f18charles/expense-tracker/internal/utils"
 )
 
 func Dashboard(w http.ResponseWriter, r *http.Request) {
