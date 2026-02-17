@@ -1,24 +1,32 @@
-package storage
+package summary
 
 import (
 	"encoding/csv"
-	"expense-tracker/internal/models"
 	"os"
 	"strconv"
 	"time"
 )
 
-func GetMonthlySummary(userID uint, month time.Month, year int) (models.MonthlySummary, error) {
+type MonthlySummary struct {
+	Month      time.Month
+	Year       int
+	OpeningBal int64
+	TotalExp   int64
+	CurrBal    int64
+	ByCategory map[string]int64
+}
+
+func GetMonthlySummary(userID uint, month time.Month, year int) (MonthlySummary, error) {
 	f, err := os.Open("transactions.csv")
 	if err != nil {
-		return models.MonthlySummary{}, err
+		return MonthlySummary{}, err
 	}
 	defer f.Close()
 
 	reader := csv.NewReader(f)
 	records, _ := reader.ReadAll()
 
-	summary := models.MonthlySummary{
+	summary := MonthlySummary{
 		Month: month, Year: year,
 		ByCategory: make(map[string]int64),
 	}

@@ -1,33 +1,25 @@
 package models
 
 import (
+	"gorm.io/gorm"
 	"time"
 )
 
 type User struct {
-	ID            uint      `json:"id"`
-	Name          string    `json:"name"`
-	Email         string    `json:"email"`
-	PassHash      string    `json:"-"`
-	CreatedAt     time.Time `json:"created_at"`
-	authenticated bool
+	gorm.Model
+	Name     string
+	Email    string `gorm:"unique"`
+	PassHash string
 }
 
 type Transaction struct {
-	ID          uint
-	UserID      uint
-	Date        uint
+	gorm.Model
+	Date        time.Time
 	Description string
 	Category    string
 	Amount      int64
 	IsIncome    bool
+	UserID      uint
+	User        User
 }
 
-type MonthlySummary struct {
-	Month      time.Month
-	Year       int
-	OpeningBal int64
-	TotalExp   int64
-	CurrBal    int64
-	ByCategory map[string]int64
-}

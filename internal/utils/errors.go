@@ -1,17 +1,17 @@
 package utils
 
 import (
-	"net/http"
 	"html/template"
+	"net/http"
 )
 
 type ErrorData struct {
-	Code  int
+	Code    int
 	Message string
 }
 
-func ErrorHandler(w http.ResponseWriter,r *http.Request, code int, msg string){
-	tmpl, err := template.ParseFiles("/web/template/base.html","/web/template/error_page.html")
+func ErrorHandler(w http.ResponseWriter, r *http.Request, code int, msg string) {
+	tmpl, err := template.ParseFiles("/web/template/base.html", "/web/template/error_page.html")
 	if err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
@@ -20,7 +20,7 @@ func ErrorHandler(w http.ResponseWriter,r *http.Request, code int, msg string){
 	w.WriteHeader(code)
 
 	data := ErrorData{
-		Code: code,
+		Code:    code,
 		Message: msg,
 	}
 
