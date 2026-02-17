@@ -1,11 +1,12 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
-	"text/template/parse"
 	"time"
 
+	"github.com/f18charles/expense-tracker/internal/api/middleware"
 	utils "github.com/f18charles/expense-tracker/internal/utils"
 	"github.com/f18charles/expense-tracker/pkg/summary"
 	"gorm.io/gorm"
@@ -13,7 +14,7 @@ import (
 
 func Dashboard(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		userID, err := middleware.GetUserId(r)
+		userID, err := middleware.GetUserID(r)
 		if err != nil {
 			http.Redirect(w,r, "/login", http.StatusSeeOther)
 			return
@@ -35,7 +36,11 @@ func Dashboard(db *gorm.DB) http.HandlerFunc {
 			}
 		}
 
-		summary := summary.GetMonthlySummary(db, userID, month, year)
+		summary, err := summary.GetMonthlySummary(db, userID, month, year)
+		if err != nil {
+			fmt.Errorf(err.Error())
+			return
+		}
 
 		data := struct {
 			Summary summary.MonthlySummary

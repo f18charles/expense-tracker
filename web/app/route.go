@@ -10,7 +10,7 @@ func Routes(db *gorm.DB) http.Handler {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/dashboard", handlers.Dashboard(db))
-	mux.HandleFunc("/add", handlers.AddTransaction(db))
+	// mux.HandleFunc("/add", handlers.AddTransaction(db))
 
 	return mux
 

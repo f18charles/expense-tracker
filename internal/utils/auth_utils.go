@@ -1,8 +1,16 @@
 package utils
 
-func AutoIncrementID(id int) (int, error) {
-	if id >= 1 {
-		return id + 1, nil
+import (
+	"net/http"
+	"strconv"
+)
+
+func SetSession(w http.ResponseWriter, userID uint) {
+	c := &http.Cookie{
+		Name: "user_id",
+		Value: strconv.Itoa(int(userID)),
+		Path: "/",
+		HttpOnly: true,
 	}
-	return 1, nil
+	http.SetCookie(w,c)
 }

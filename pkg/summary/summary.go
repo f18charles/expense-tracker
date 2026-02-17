@@ -5,6 +5,8 @@ import (
 	"os"
 	"strconv"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type MonthlySummary struct {
@@ -16,7 +18,7 @@ type MonthlySummary struct {
 	ByCategory map[string]int64
 }
 
-func GetMonthlySummary(userID uint, month time.Month, year int) (MonthlySummary, error) {
+func GetMonthlySummary(db *gorm.DB,userID uint, month time.Month, year int) (MonthlySummary, error) {
 	f, err := os.Open("transactions.csv")
 	if err != nil {
 		return MonthlySummary{}, err

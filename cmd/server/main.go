@@ -8,6 +8,7 @@ import (
 
 	"github.com/f18charles/expense-tracker/internal/api/handlers"
 	"github.com/f18charles/expense-tracker/internal/database"
+	"github.com/f18charles/expense-tracker/web/app"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -27,7 +28,7 @@ func main() {
 	database.Setup(db)
 
 	// normal routes
-	http.HandleFunc("/", handlers.Dashboard)
+	http.HandleFunc("/", handlers.Dashboard(db))
 
 	port := 5000
 	fmt.Printf("Server is running on %v\n",port)
