@@ -1,11 +1,9 @@
 package summary
 
 import (
-	"encoding/csv"
-	"os"
-	"strconv"
 	"time"
 
+	"github.com/f18charles/expense-tracker/internal/models"
 	"gorm.io/gorm"
 )
 
@@ -19,41 +17,54 @@ type MonthlySummary struct {
 }
 
 func GetMonthlySummary(db *gorm.DB,userID uint, month time.Month, year int) (MonthlySummary, error) {
-	f, err := os.Open("transactions.csv")
+	start := time.Date(year, month, 1, 0, 0, 0, 0, time.UTC)
+	end := start.AddDate(0,1,0)
+
+	var txs []models.Transaction
+
+	err := db.Where("user_id=? AND date >= ? and date < ?",userID,start,end).Find(&txs).Error
 	if err != nil {
 		return MonthlySummary{}, err
 	}
-	defer f.Close()
-
-	reader := csv.NewReader(f)
-	records, _ := reader.ReadAll()
 
 	summary := MonthlySummary{
-		Month: month, Year: year,
+		Month: month, 
+		Year: year,
 		ByCategory: make(map[string]int64),
 	}
 
-	for _, r := range records {
-		// r[1] is UserID, r[2] is Unix Date
-		uID, _ := strconv.ParseUint(r[1], 10, 64)
-		timestamp, _ := strconv.ParseInt(r[2], 10, 64)
-		tTime := time.Unix(timestamp, 0)
+	var totalIncome int64
+	var totalExpense int64
 
-		if uint(uID) == userID && tTime.Month() == month && tTime.Year() == year {
-			amt, _ := strconv.ParseInt(r[5], 10, 64)
-			isInc, _ := strconv.ParseBool(r[6])
-			cat := r[4]
-
-			if cat == "Opening Balance" {
-				summary.OpeningBal = amt
-			} else if isInc {
-				summary.CurrBal += amt
-			} else {
-				summary.TotalExp += amt
-				summary.ByCategory[cat] += amt
-			}
+	for _, tx := range txs {
+		if tx.IsIncome {
+			totalIncome += tx.Amount
+		} else {
+			totalExpense += tx.Amount
+			summary.ByCategory[tx.Category]+=tx.Amount
 		}
 	}
-	summary.CurrBal += (summary.OpeningBal - summary.TotalExp)
+
+	var previousTxs []models.Transaction
+
+	err = db.Where("user_id = ? AND date < ?", userID, start).Find(&previousTxs).Error
+	if err != nil {
+		return MonthlySummary{}, err
+	}
+	
+	var opening int64
+
+	for _, tx := range previousTxs {
+		if tx.IsIncome {
+			opening += tx.Amount
+		} else {
+			opening -= tx.Amount
+		}
+	}
+	
+	summary.OpeningBal = opening
+	summary.TotalExp = totalExpense
+	summary.CurrBal = opening + totalIncome - totalExpense
+
 	return summary, nil
 }

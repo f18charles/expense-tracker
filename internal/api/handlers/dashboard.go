@@ -36,18 +36,20 @@ func Dashboard(db *gorm.DB) http.HandlerFunc {
 			}
 		}
 
-		summary, err := summary.GetMonthlySummary(db, userID, month, year)
+		sum, err := summary.GetMonthlySummary(db, userID, month, year)
 		if err != nil {
-			fmt.Errorf(err.Error())
+			fmt.Println(err)
 			return
 		}
 
 		data := struct {
+			UserID uint
 			Summary summary.MonthlySummary
 			Month time.Month
-			year int
+			Year int
 		}{
-			Summary: summary,
+			UserID: userID,
+			Summary: sum,
 			Month: month,
 			Year: year,
 		}

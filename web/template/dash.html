@@ -1,5 +1,38 @@
 {{ define "title" }}Dashboard{{ end }}
 
 {{ define "content" }}
-    <p>Welcome to the Dashboard!</p>
+
+<h2>Welcome to your Dashboard!</h2>
+
+<p><strong>Month:</strong> {{ .Month }} {{ .Year }}</p>
+
+<h3>Balance</h3>
+<p>Current Balance: {{ .Summary.CurrBal }}</p>
+<p>Total Expenses: {{ .Summary.TotalExp }}</p>
+
+<h3>Expenses by Category</h3>
+<ul>
+    {{ range $category, $amount := .Summary.ByCategory }}
+        <li>{{ $category }}: {{ $amount }}</li>
+    {{ else }}
+        <li>No expenses recorded this month.</li>
+    {{ end }}
+</ul>
+
+<h3>Add New Transaction</h3>
+<form action="/add" method="POST">
+    <label>Description: <input type="text" name="description" required></label><br>
+    <label>Category: <input type="text" name="category" required></label><br>
+    <label>Amount: <input type="number" name="amount" required></label><br>
+    <label>Type:
+        <select name="type">
+            <option value="expense">Expense</option>
+            <option value="income">Income</option>
+        </select>
+    </label><br>
+    <button type="submit">Add Transaction</button>
+</form>
+
+<p><a href="/logout">Logout</a></p>
+
 {{ end }}

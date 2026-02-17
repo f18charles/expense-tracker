@@ -1,0 +1,11 @@
+{{ define "title" }}signin{{ end }}
+
+{{ define "content" }}
+    <form action="/signin" method="post">
+        <label for="email">Email</label>
+        <input type="email" id="email">
+        <label for="password">Password</label>
+        <input type="password" id="password">
+        <button type="submit">Signin</button>
+    </form>
+{{ end }}
