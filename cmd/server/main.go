@@ -6,11 +6,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/f18charles/expense-tracker/internal/api/handlers"
 	"github.com/f18charles/expense-tracker/internal/database"
 	"github.com/f18charles/expense-tracker/web/app"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
 )
 
 func main() {
@@ -18,17 +15,6 @@ func main() {
 
 	db := database.Init()
 	r := app.Routes(db)
-
-	// db check
-	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
-    if err != nil {
-        panic(err)
-    }
-
-	database.Setup(db)
-
-	// normal routes
-	http.HandleFunc("/", handlers.Dashboard(db))
 
 	port := 5000
 	fmt.Printf("Server is running on %v\n",port)

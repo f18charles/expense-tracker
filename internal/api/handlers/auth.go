@@ -12,7 +12,7 @@ import (
 func SignUp(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
-			http.ServeFile(w, r, "/web/template/signup.html")
+			utils.RenderTemplate(w, "signup.html", nil)
 			return
 		}
 

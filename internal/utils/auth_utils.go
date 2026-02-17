@@ -11,6 +11,7 @@ func SetSession(w http.ResponseWriter, userID uint) {
 		Value: strconv.Itoa(int(userID)),
 		Path: "/",
 		HttpOnly: true,
+		MaxAge: 300,
 	}
 	http.SetCookie(w,c)
 }

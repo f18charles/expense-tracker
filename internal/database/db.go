@@ -12,16 +12,10 @@ func Setup(db *gorm.DB) {
 }
 
 func Init() *gorm.DB {
-	db, err := gorm.Open(sqlite.Open("/internal/database/storage/app.db"), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open("internal/database/storage/app.db"), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
 	db.AutoMigrate(&models.User{}, &models.Transaction{})
 	return db
-}
-
-// auth
-func AddUser(name, email, password string) (string, error) {
-
-	return "", nil
 }
