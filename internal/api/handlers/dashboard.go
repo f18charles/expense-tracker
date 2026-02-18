@@ -3,7 +3,6 @@ package handlers
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/f18charles/expense-tracker/internal/api/middleware"
@@ -16,25 +15,13 @@ func Dashboard(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		userID, err := middleware.GetUserID(r)
 		if err != nil {
-			http.Redirect(w,r, "/login", http.StatusSeeOther)
+			http.Redirect(w,r, "/signin", http.StatusSeeOther)
 			return
 		}
 		
 		now := time.Now()
 		month := now.Month()
 		year := now.Year()
-
-		if m := r.URL.Query().Get("month"); m != "" {
-			if parsed, err := strconv.Atoi(m); err == nil {
-				month = time.Month(parsed)
-			}
-		}
-
-		if y := r.URL.Query().Get("year"); y != "" {
-			if parsed, err := strconv.Atoi(y); err == nil {
-				year = parsed
-			}
-		}
 
 		sum, err := summary.GetMonthlySummary(db, userID, month, year)
 		if err != nil {
@@ -54,7 +41,7 @@ func Dashboard(db *gorm.DB) http.HandlerFunc {
 			Year: year,
 		}
 
-		if r.URL.Path != "/" {
+		if r.URL.Path != "/dashboard" {
 			utils.RenderTemplate(w, "error_page.html", map[string]any{
 				"Code":    http.StatusNotFound,
 				"Message": "Route not found",

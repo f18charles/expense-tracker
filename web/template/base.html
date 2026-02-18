@@ -4,14 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ block "title" . }}Default Title{{ end }}</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
-        header, footer { background-color: #f2f2f2; padding: 1rem; text-align: center; }
-        nav a { margin: 0 1rem; text-decoration: none; color: #333; }
-        main { padding: 1rem; }
-        h1, h2, h3 { margin: 0.5rem 0; }
-        form input, form select, form button { margin: 0.3rem 0; display: block; }
-    </style>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js" integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz" crossorigin="anonymous"></script>
 </head>
 <body>
     <header>
@@ -19,9 +15,9 @@
         <nav>
             {{ if .UserID }}
                 <a href="/dashboard">Dashboard</a>
-                <a href="/logout">Logout</a>
+                <a href="/signout">Logout</a>
             {{ else }}
-                <a href="/login">Login</a>
+                <a href="/signin">Sign in</a>
                 <a href="/signup">Sign Up</a>
             {{ end }}
         </nav>

@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	// static and assets
+	
 
 	db := database.Init()
 	r := app.Routes(db)

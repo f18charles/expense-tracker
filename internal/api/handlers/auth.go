@@ -45,7 +45,7 @@ func SignUp(db *gorm.DB) http.HandlerFunc {
 func SignIn(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
-			http.ServeFile(w,r,"/web/template/signin.html")
+			utils.RenderTemplate(w,"signin.html",nil)
 			return
 		}
 
@@ -77,6 +77,6 @@ func SignOut() http.HandlerFunc {
 			MaxAge: -1,
 		}
 		http.SetCookie(w, c)
-		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		http.Redirect(w, r, "/signin", http.StatusSeeOther)
 	}
 }

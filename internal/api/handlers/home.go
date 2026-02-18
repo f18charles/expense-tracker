@@ -1,14 +1,12 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/f18charles/expense-tracker/internal/api/middleware"
+	"github.com/f18charles/expense-tracker/internal/models"
 	"github.com/f18charles/expense-tracker/internal/utils"
-	"github.com/f18charles/expense-tracker/pkg/summary"
 	"gorm.io/gorm"
 )
 
@@ -16,7 +14,7 @@ func Home(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		userID, err := middleware.GetUserID(r)
 		if err != nil {
-			http.Redirect(w,r, "/login", http.StatusSeeOther)
+			http.Redirect(w,r, "/signin", http.StatusSeeOther)
 			return
 		}
 		
@@ -24,32 +22,16 @@ func Home(db *gorm.DB) http.HandlerFunc {
 		month := now.Month()
 		year := now.Year()
 
-		if m := r.URL.Query().Get("month"); m != "" {
-			if parsed, err := strconv.Atoi(m); err == nil {
-				month = time.Month(parsed)
-			}
-		}
-
-		if y := r.URL.Query().Get("year"); y != "" {
-			if parsed, err := strconv.Atoi(y); err == nil {
-				year = parsed
-			}
-		}
-
-		sum, err := summary.GetMonthlySummary(db, userID, month, year)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
+		var user models.User
 
 		data := struct {
 			UserID uint
-			Summary summary.MonthlySummary
+			UserName string
 			Month time.Month
 			Year int
 		}{
 			UserID: userID,
-			Summary: sum,
+			UserName: user.Name,
 			Month: month,
 			Year: year,
 		}
@@ -64,7 +46,7 @@ func Home(db *gorm.DB) http.HandlerFunc {
 
 		switch r.Method {
 		case http.MethodGet:
-			utils.RenderTemplate(w, "dash.html", data)
+			utils.RenderTemplate(w, "home.html", data)
 		default:
 			utils.RenderTemplate(w, "error_page.html", map[string]any{
 				"Code":    http.StatusMethodNotAllowed,

@@ -4,6 +4,7 @@
 
 <h2>Welcome to your Dashboard!</h2>
 
+{{ if gt (len .Summary.ByCategory) 0 }}
 <p><strong>Month:</strong> {{ .Month }} {{ .Year }}</p>
 
 <h3>Balance</h3>
@@ -18,21 +19,52 @@
         <li>No expenses recorded this month.</li>
     {{ end }}
 </ul>
+{{ else }}
 
-<h3>Add New Transaction</h3>
-<form action="/add" method="POST">
-    <label>Description: <input type="text" name="description" required></label><br>
-    <label>Category: <input type="text" name="category" required></label><br>
-    <label>Amount: <input type="number" name="amount" required></label><br>
-    <label>Type:
-        <select name="type">
-            <option value="expense">Expense</option>
-            <option value="income">Income</option>
-        </select>
-    </label><br>
-    <button type="submit">Add Transaction</button>
-</form>
+    <p>There's nothing to show. Are you broke?</p>
 
-<p><a href="/logout">Logout</a></p>
+    <button
+    hx-get="/modal"
+    hx-target="#modals-here"
+    hx-trigger="click"
+    data-bs-toggle="modal"
+    data-bs-target="#modals-here"
+    class="btn primary">Open Modal</button>
+
+<div id="modals-here"
+    class="modal modal-blur fade"
+    style="display: none"
+    aria-hidden="false"
+    tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content"> <span class="close">&times;</span>
+            <h3>Add New Transaction</h3>
+
+            <form action="/add" method="POST">
+                <label>Description:
+                    <input type="text" name="description" required>
+                </label><br>
+
+                <label>Category:
+                    <input type="text" name="category" required>
+                </label><br>
+
+                <label>Amount:
+                    <input type="number" name="amount" required>
+                </label><br>
+
+                <label>Type:
+                    <select name="type">
+                        <option value="expense">Expense</option>
+                        <option value="income">Income</option>
+                    </select>
+                </label><br>
+
+                <button type="submit">Add Transaction</button>
+            </form>
+
+        </div> 
+    </div>
 
 {{ end }}
+{{end}}

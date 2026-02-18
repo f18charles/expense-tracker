@@ -1,0 +1,24 @@
+{{ define "title" }}Home{{ end }}
+
+{{ define "content" }}
+
+<div class="container"> <h1>Dashboard</h1>
+<div>
+    <p><strong>User ID:</strong> {{ .UserID }}</p>
+    <p><strong>Name:</strong> {{ .UserName }}</p>
+    <p><strong>Month:</strong> {{ .Month }}</p>
+    <p><strong>Year:</strong> {{ .Year }}</p>
+</div>
+
+<hr>
+
+<div>
+    <h2>Quick Actions</h2>
+    <ul>
+        <li><a href="/expenses">View Expenses</a></li>
+        <li><a href="/expenses/new">Add Expense</a></li>
+        <li><a href="/reports">View Reports</a></li>
+    </ul>
+</div>
+
+</div> {{ end }}
