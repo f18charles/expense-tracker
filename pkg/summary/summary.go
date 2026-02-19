@@ -64,7 +64,7 @@ func GetMonthlySummary(db *gorm.DB,userID uint, month time.Month, year int) (Mon
 	
 	summary.OpeningBal = opening
 	summary.TotalExp = totalExpense
-	summary.CurrBal = opening + totalIncome - totalExpense
+	summary.CurrBal = (opening + totalIncome) - totalExpense
 
 	return summary, nil
 }

@@ -4,13 +4,18 @@
 
 <h2>Welcome to your Dashboard!</h2>
 
-{{ if gt (len .Summary.ByCategory) 0 }}
+{{ if or (gt (len .Summary.ByCategory) 0) (gt .Summary.CurrBal 0) }}
 <p><strong>Month:</strong> {{ .Month }} {{ .Year }}</p>
-
+<button
+    data-bs-toggle="modal"
+    data-bs-target="#modals-here"
+    class="btn btn-primary">Expense/Income <strong style="font-size: large;">+</strong></button>
 <h3>Balance</h3>
-<p>Current Balance: {{ .Summary.CurrBal }}</p>
-<p>Total Expenses: {{ .Summary.TotalExp }}</p>
-
+{{if lt .Summary.CurrBal 0 }}
+<p class="text-large text-danger">Current Balance: {{ .Summary.CurrBal }}</p>
+{{else}}
+<p class="text-large">Total Expenses: {{ .Summary.TotalExp }}</p>
+{{end}}
 <h3>Expenses by Category</h3>
 <ul>
     {{ range $category, $amount := .Summary.ByCategory }}
@@ -22,14 +27,14 @@
 {{ else }}
 
     <p>There's nothing to show. Are you broke?</p>
-
     <button
-    hx-get="/modal"
-    hx-target="#modals-here"
-    hx-trigger="click"
     data-bs-toggle="modal"
     data-bs-target="#modals-here"
-    class="btn primary">Open Modal</button>
+    class="btn btn-primary">Prove me wrong</button>
+
+
+
+{{ end }}
 
 <div id="modals-here"
     class="modal modal-blur fade"
@@ -37,34 +42,33 @@
     aria-hidden="false"
     tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content"> <span class="close">&times;</span>
-            <h3>Add New Transaction</h3>
+        <div class="modal-content"> 
+            <div class="container">
+                <div class="flex justify-content-between">
+                    <h3>Add New Transaction</h3>
+                </div>
+                <form action="/add" method="POST">
+                    <label>Description:
+                        <input type="text" name="description" required>
+                    </label><br>
 
-            <form action="/add" method="POST">
-                <label>Description:
-                    <input type="text" name="description" required>
-                </label><br>
+                    <label>Category:
+                        <input type="text" name="category" required>
+                    </label><br>
 
-                <label>Category:
-                    <input type="text" name="category" required>
-                </label><br>
-
-                <label>Amount:
-                    <input type="number" name="amount" required>
-                </label><br>
-
-                <label>Type:
-                    <select name="type">
-                        <option value="expense">Expense</option>
-                        <option value="income">Income</option>
-                    </select>
-                </label><br>
-
-                <button type="submit">Add Transaction</button>
-            </form>
-
-        </div> 
+                    <label>Amount:
+                        <input type="number" name="amount" required>
+                    </label><br>
+                    <label>Type:
+                        <select name="type">
+                            <option value="expense">Expense</option>
+                            <option value="income">Income</option>
+                        </select>
+                    </label>
+                    <br>
+                    <button class="btn btn-secondary" type="submit">Add Transaction</button>
+                </form>
+            </div> 
+        </div>
     </div>
-
-{{ end }}
 {{end}}

@@ -12,8 +12,8 @@ import (
 
 func AddTransaction(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != http.MethodPost {
-			http.Redirect(w,r,"/dashboard",http.StatusSeeOther)
+		if r.Method == http.MethodGet {
+			http.Redirect(w,r,"/add",http.StatusSeeOther)
 			return
 		}
 
@@ -26,7 +26,7 @@ func AddTransaction(db *gorm.DB) http.HandlerFunc {
 		description := r.FormValue("description")
 		category := r.FormValue("category")
 		amount := r.FormValue("amount")
-		extype := r.FormValue("isIncome")
+		extype := r.FormValue("type")
 
 		money,err := strconv.ParseInt(amount, 10, 64)
 		if err != nil {
