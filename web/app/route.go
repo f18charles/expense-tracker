@@ -16,6 +16,8 @@ func Routes(db *gorm.DB) http.Handler {
 	
 	// static and assets
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("web/static"))))
+	mux.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("web/assets"))))
+	mux.Handle("/lib/", http.StripPrefix("/lib/", http.FileServer(http.Dir("web/lib"))))
 
 	mux.HandleFunc("/", handlers.Home(db))
 	mux.HandleFunc("/dashboard", handlers.Dashboard(db))
