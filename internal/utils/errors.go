@@ -11,7 +11,7 @@ type ErrorData struct {
 }
 
 func ErrorHandler(w http.ResponseWriter, r *http.Request, code int, msg string) {
-	tmpl, err := template.ParseFiles("/web/template/base.html", "/web/template/error_page.html")
+	tmpl, err := template.ParseFiles("/web/template/base.html", "/web/template/pages/authentication/error.html")
 	if err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
