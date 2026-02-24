@@ -5,13 +5,13 @@
     <div class="col-xxl-9">
         <div class="row">
             <!-- Income Card -->
-            <div class="col-xl-4 col-md-6 mb-4">
+            <div class="col-xl-6 col-md-6 mb-4">
                 <div class="card">
                     <div class="card-body">
                         <div class="row mb-3">
                             <div class="col-8">
                                 <div class="btn rounded shadow text-primary">
-                                    <i class="fas fa-dollar-sign"></i>
+                                    <i class="fa-solid fa-money-bills"></i>
                                 </div>
                             </div>
                             <div class="col d-flex justify-content-end">
@@ -27,22 +27,22 @@
                             </div>
                         </div>
 
-                        <h6>Income</h6>
-                        <p>Last Month</p>
+                        <h6>Balance</h6>
+                        <!-- <p>Last Month</p> -->
 
-                        <h4 class="text-primary mb-0">$24,977.05</h4>
+                        <h4 class="text-primary mb-0">Ksh {{ .Summary.CurrBal }}</h4>
                     </div>
                 </div>
             </div>
 
             <!-- Total Spent -->
-            <div class="col-xl-4 col-md-6 mb-4">
+            <div class="col-xl-6 col-md-6 mb-4">
                 <div class="card">
                     <div class="card-body">
                         <div class="row mb-3">
                             <div class="col-8">
                                 <div class="btn rounded shadow text-primary">
-                                    <i class="fas fa-dollar-sign"></i>
+                                    <i class="fa-solid fa-receipt"></i>
                                 </div>
                             </div>
                             <div class="col d-flex justify-content-end">
@@ -58,16 +58,16 @@
                         </div>
 
                         <h6>Total Spent</h6>
-                        <p>Last Month</p>
+                        <!-- <p>Last Month</p> -->
 
-                        <h4 class="text-primary mb-0">$16,547.59</h4>
+                        <h4 class="text-primary mb-0">Ksh {{ .Summary.TotalExp }}</h4>
                     </div>
                 </div>
             </div>
 
             <!-- Transactions -->
-            <div class="col-xl-4 col-md-6 mb-4 ">
-                <div class="card">
+            <!-- <div class="col-xl-4 col-md-6 mb-4 ">
+                    <div class="card">
                     <div class="card-body">
                         <div class="row mb-3">
                             <div class="col-8">
@@ -90,10 +90,10 @@
                         <h6>Transactions</h6>
                         <p>Last Month</p>
 
-                        <h4 class="text-primary mb-0">$90,548.23</h4>
+                        <h4 class="text-primary mb-0">Ksh 90,548.23</h4>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- TODO -->
             <!-- Investments -->
@@ -164,8 +164,8 @@
                     <!-- Balance -->
                     <div class="card">
                         <div class="card-header">
-                            <h6>Balance</h6>
-                            <h4 class="text-primary">$12,389.54</h4>
+                            <h6>Monthly Balance</h6>
+                            <h4 class="text-primary">Ksh </h4>
                         </div>
                         <div class="card-body">
                             <div id="d2c_barChart"></div>
