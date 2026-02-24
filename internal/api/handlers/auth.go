@@ -12,7 +12,7 @@ import (
 func SignUp(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
-			utils.RenderTemplate(w, "signup.html", nil)
+			utils.AuthTemplate(w, "signup.html", nil)
 			return
 		}
 
@@ -45,7 +45,7 @@ func SignUp(db *gorm.DB) http.HandlerFunc {
 func SignIn(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
-			utils.RenderTemplate(w,"signin.html",nil)
+			utils.AuthTemplate(w,"signin.html",nil)
 			return
 		}
 

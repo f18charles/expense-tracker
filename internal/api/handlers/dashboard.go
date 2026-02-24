@@ -51,7 +51,7 @@ func Dashboard(db *gorm.DB) http.HandlerFunc {
 
 		switch r.Method {
 		case http.MethodGet:
-			utils.RenderTemplate(w, "dash.html", data)
+			utils.RenderTemplate(w, "index.html", data)
 		default:
 			utils.RenderTemplate(w, "error_page.html", map[string]any{
 				"Code":    http.StatusMethodNotAllowed,
