@@ -24,3 +24,5 @@ lib
 .env
 
 app.db
+.gitignore
+CLAUDE.md
