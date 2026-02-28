@@ -1,21 +1,39 @@
 package database
 
 import (
-	"github.com/f18charles/expense-tracker/internal/models"
-	"gorm.io/driver/sqlite"
+	"log"
+
+	"github.com/f18charles/piggy-bank/backend/internal/config"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
-// create database
-func Setup(db *gorm.DB) {
-	db.AutoMigrate(&models.User{}, &models.Transaction{})
-}
+var DB *gorm.DB
 
-func Init() *gorm.DB {
-	db, err := gorm.Open(sqlite.Open("internal/database/storage/app.db"), &gorm.Config{})
-	if err != nil {
-		panic(err)
+func Connect() {
+	var logLevel logger.LogLevel
+
+	if config.App.AppEnv == "development" {
+		logLevel = logger.Info
+	} else {
+		logLevel = logger.Error
 	}
-	db.AutoMigrate(&models.User{}, &models.Transaction{})
-	return db
+
+	db, err := gorm.Open(postgres.Open(config.App.DatabaseURL), &gorm.Config{Logger: logger.Default.LogMode(logLevel),
+	})
+	if err != nil {
+		log.Fatalf("Failed to connect to database: %v", err)
+	}
+
+	sqlDB, err := db.DB()
+	if err != nil {
+		log.Fatalf("Failed to get database instance: %v", err)
+	}
+
+	sqlDB.SetMaxOpenConns(25)
+	sqlDB.SetMaxIdleConns(10)
+
+	DB = db
+	log.Println("Database connected successfully")
 }

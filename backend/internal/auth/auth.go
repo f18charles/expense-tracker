@@ -16,4 +16,3 @@ func CheckPass(password, hash string) bool {
 	}
 	return true
 }
-

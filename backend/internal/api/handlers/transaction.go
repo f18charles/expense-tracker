@@ -13,13 +13,13 @@ import (
 func AddTransaction(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
-			http.Redirect(w,r,"/add",http.StatusSeeOther)
+			http.Redirect(w, r, "/add", http.StatusSeeOther)
 			return
 		}
 
 		userID, err := middleware.GetUserID(r)
 		if err != nil {
-			http.Redirect(w,r, "/signin", http.StatusSeeOther)
+			http.Redirect(w, r, "/signin", http.StatusSeeOther)
 			return
 		}
 
@@ -28,7 +28,7 @@ func AddTransaction(db *gorm.DB) http.HandlerFunc {
 		amount := r.FormValue("amount")
 		extype := r.FormValue("type")
 
-		money,err := strconv.ParseInt(amount, 10, 64)
+		money, err := strconv.ParseInt(amount, 10, 64)
 		if err != nil {
 			return
 		}
@@ -36,16 +36,16 @@ func AddTransaction(db *gorm.DB) http.HandlerFunc {
 		is_income := extype == "income"
 
 		transactions := models.Transaction{
-			Date: time.Now(),
+			Date:        time.Now(),
 			Description: description,
-			Category: category,
-			Amount: money,
-			IsIncome: is_income,
-			UserID: userID,
+			Category:    category,
+			Amount:      money,
+			IsIncome:    is_income,
+			UserID:      userID,
 		}
 
 		if err := db.Create(&transactions).Error; err != nil {
-			http.Error(w,"Couldn't add transaction",http.StatusInternalServerError)
+			http.Error(w, "Couldn't add transaction", http.StatusInternalServerError)
 			return
 		}
 		// 7. Redirect back to dashboard

@@ -19,7 +19,7 @@ func RenderTemplate(w http.ResponseWriter, page string, data any) {
 }
 
 func AuthTemplate(w http.ResponseWriter, page string, data any) {
-	tmpl, err := template.ParseFiles("web/template/authentication/base.html","web/template/authentication/"+page)
+	tmpl, err := template.ParseFiles("web/template/authentication/base.html", "web/template/authentication/"+page)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

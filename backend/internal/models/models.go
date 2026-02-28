@@ -22,4 +22,3 @@ type Transaction struct {
 	UserID      uint
 	User        User
 }
-

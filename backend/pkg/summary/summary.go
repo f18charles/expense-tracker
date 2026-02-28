@@ -16,20 +16,20 @@ type MonthlySummary struct {
 	ByCategory map[string]int64
 }
 
-func GetMonthlySummary(db *gorm.DB,userID uint, month time.Month, year int) (MonthlySummary, error) {
+func GetMonthlySummary(db *gorm.DB, userID uint, month time.Month, year int) (MonthlySummary, error) {
 	start := time.Date(year, month, 1, 0, 0, 0, 0, time.UTC)
-	end := start.AddDate(0,1,0)
+	end := start.AddDate(0, 1, 0)
 
 	var txs []models.Transaction
 
-	err := db.Where("user_id=? AND date >= ? and date < ?",userID,start,end).Find(&txs).Error
+	err := db.Where("user_id=? AND date >= ? and date < ?", userID, start, end).Find(&txs).Error
 	if err != nil {
 		return MonthlySummary{}, err
 	}
 
 	summary := MonthlySummary{
-		Month: month, 
-		Year: year,
+		Month:      month,
+		Year:       year,
 		ByCategory: make(map[string]int64),
 	}
 
@@ -41,7 +41,7 @@ func GetMonthlySummary(db *gorm.DB,userID uint, month time.Month, year int) (Mon
 			totalIncome += tx.Amount
 		} else {
 			totalExpense += tx.Amount
-			summary.ByCategory[tx.Category]+=tx.Amount
+			summary.ByCategory[tx.Category] += tx.Amount
 		}
 	}
 
@@ -51,7 +51,7 @@ func GetMonthlySummary(db *gorm.DB,userID uint, month time.Month, year int) (Mon
 	if err != nil {
 		return MonthlySummary{}, err
 	}
-	
+
 	var opening int64
 
 	for _, tx := range previousTxs {
@@ -61,7 +61,7 @@ func GetMonthlySummary(db *gorm.DB,userID uint, month time.Month, year int) (Mon
 			opening -= tx.Amount
 		}
 	}
-	
+
 	summary.OpeningBal = opening
 	summary.TotalExp = totalExpense
 	summary.CurrBal = (opening + totalIncome) - totalExpense

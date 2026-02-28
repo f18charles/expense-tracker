@@ -15,10 +15,10 @@ func Dashboard(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		userID, err := middleware.GetUserID(r)
 		if err != nil {
-			http.Redirect(w,r, "/signin", http.StatusSeeOther)
+			http.Redirect(w, r, "/signin", http.StatusSeeOther)
 			return
 		}
-		
+
 		now := time.Now()
 		month := now.Month()
 		year := now.Year()
@@ -30,15 +30,15 @@ func Dashboard(db *gorm.DB) http.HandlerFunc {
 		}
 
 		data := struct {
-			UserID uint
+			UserID  uint
 			Summary summary.MonthlySummary
-			Month time.Month
-			Year int
+			Month   time.Month
+			Year    int
 		}{
-			UserID: userID,
+			UserID:  userID,
 			Summary: sum,
-			Month: month,
-			Year: year,
+			Month:   month,
+			Year:    year,
 		}
 
 		if r.URL.Path != "/dashboard" {

@@ -23,17 +23,17 @@ func SignUp(db *gorm.DB) http.HandlerFunc {
 		hash, err := auth.HashPass(password)
 		if err != nil {
 			http.Error(w, "Failed to hash password", http.StatusInternalServerError)
-			return 
+			return
 		}
 
-		user := models.User {
-			Name: name,
-			Email: email,
+		user := models.User{
+			Name:     name,
+			Email:    email,
 			PassHash: string(hash),
 		}
 
 		if err := db.Create(&user).Error; err != nil {
-			utils.ErrorHandler(w,r,http.StatusBadRequest,"Email already Exists")
+			utils.ErrorHandler(w, r, http.StatusBadRequest, "Email already Exists")
 			return
 		}
 
@@ -45,7 +45,7 @@ func SignUp(db *gorm.DB) http.HandlerFunc {
 func SignIn(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
-			utils.AuthTemplate(w,"signin.html",nil)
+			utils.AuthTemplate(w, "signin.html", nil)
 			return
 		}
 
@@ -70,10 +70,10 @@ func SignIn(db *gorm.DB) http.HandlerFunc {
 
 func SignOut() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		c := &http.Cookie {
-			Name: "user_id",
-			Value: "",
-			Path: "/",
+		c := &http.Cookie{
+			Name:   "user_id",
+			Value:  "",
+			Path:   "/",
 			MaxAge: -1,
 		}
 		http.SetCookie(w, c)
