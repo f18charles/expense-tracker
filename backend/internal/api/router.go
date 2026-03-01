@@ -1,0 +1,91 @@
+package api
+
+import (
+	"net/http"
+
+	"github.com/f18charles/piggy-bank/backend/internal/api/handlers"
+	"github.com/f18charles/piggy-bank/backend/internal/api/middleware"
+	"github.com/gin-gonic/gin"
+)
+
+func SetupRouter() *gin.Engine {
+	r := gin.Default()
+
+	r.Use(middleware.CORS())
+
+	r.GET("/health", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"status": "ok"})
+	})
+
+	// API v1
+	v1 := r.Group("api/v1")
+
+	// public routes
+	auth := v1.Group("/auth")
+	{
+		auth.POST("/register", handlers.Register)
+		auth.POST("/login", handlers.Login)
+	}
+
+	mpesa := v1.Group("/mpesa")
+	{
+		mpesa.POST("/callback", handlers.MpesaCallback)
+	}
+
+	// auth required
+	protected := v1.Group("")
+	protected.Use(middleware.AuthRequired())
+	{
+		// auth
+		protected.POST("/auth/logout", handlers.Logout)
+		protected.GET("/auth/profile", handlers.Profile)
+
+		// Accounts
+		protected.GET("/accounts", handlers.ListAccounts)
+		protected.POST("/accounts", handlers.CreateAccount)
+		protected.GET("/accounts/:id", handlers.GetAccount)
+		protected.PUT("/accounts/:id", handlers.UpdateAccount)
+		protected.DELETE("/accounts/:id", handlers.DeleteAccount)
+
+		// Transactions
+		protected.GET("/transactions", handlers.ListTransactions)
+		protected.POST("/transactions", handlers.CreateTransactions)
+		protected.GET("/transactions/:id", handlers.GetTransaction)
+		protected.PUT("/transactions/:id", handlers.UpdateTransaction)
+		protected.DELETE("/transactions/:id", handlers.DeleteTransaction)
+		protected.GET("/transactions/export", handlers.ExportTransactions)
+
+		// Categories
+		protected.GET("/categories", handlers.ListCategories)
+		protected.POST("/categories", handlers.CreateCategory)
+		protected.PUT("/categories/:id", handlers.UpdateCategory)
+		protected.DELETE("/categories/:id", handlers.DeleteCategory)
+
+		// Budgets
+		protected.GET("/budgets", handlers.Listbudgets)
+		protected.POST("/budgets", handlers.CreateBudget)
+		protected.GET("/budgets/:id", handlers.GetBudget)
+		protected.PUT("/budgets/:id", handlers.UpdateBudget)
+		protected.DELETE("/budgets/:id", handlers.DeleteBudget)
+
+		//	Goals
+		protected.GET("/goals", handlers.ListGoals)
+		protected.POST("/goals", handlers.CreateGoal)
+		protected.GET("/goals/:id", handlers.GetGoal)
+		protected.PUT("/goals/:id", handlers.UpdateGoal)
+		protected.DELETE("/goals/:id", handlers.DeleteGoal)
+
+		// Summary & Insights
+		protected.GET("/summary/monthly", handlers.MonthlySummary)
+		protected.GET("/summary/overview", handlers.Overview)
+		protected.GET("/summary/spending", handlers.SpendingInsights)
+
+		// Mpesa(authenticated)
+		protected.POST("/mpesa/stk-push", handlers.MpesaSTKPush)
+		protected.GET("/mpesa/status/:id", handlers.MpesaStatus)
+
+		// bank
+	}
+
+	return r
+}

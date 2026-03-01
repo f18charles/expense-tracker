@@ -87,4 +87,3 @@ help:
 	@echo "  make test-cover     - Run tests with coverage report"
 
 .PHONY: build run clean migrate-up migrate-down migrate-drop migrate-create fmt vet tidy test test-cover help
-```

@@ -1,31 +1,11 @@
 package utils
 
-import (
-	"html/template"
-	"net/http"
+import "errors"
+
+var (
+	ErrNotFound      = errors.New("resource not found")
+	ErrUnauthorized  = errors.New("unauthorized")
+	ErrForbidden     = errors.New("forbidden")
+	ErrBadRequest    = errors.New("bad request")
+	ErrAlreadyExists = errors.New("resource already exists")
 )
-
-type ErrorData struct {
-	Code    int
-	Message string
-}
-
-func ErrorHandler(w http.ResponseWriter, r *http.Request, code int, msg string) {
-	tmpl, err := template.ParseFiles("/web/template/base.html", "/web/template/pages/authentication/error.html")
-	if err != nil {
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-
-	w.WriteHeader(code)
-
-	data := ErrorData{
-		Code:    code,
-		Message: msg,
-	}
-
-	err = tmpl.ExecuteTemplate(w, "base.html", data)
-	if err != nil {
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-	}
-}

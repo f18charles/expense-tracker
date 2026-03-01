@@ -1,19 +1,34 @@
 package middleware
 
 import (
-	"errors"
 	"net/http"
-	"strconv"
+	"strings"
+
+	"github.com/f18charles/piggy-bank/backend/internal/auth"
+	"github.com/gin-gonic/gin"
 )
 
-func GetUserID(r *http.Request) (uint, error) {
-	cookie, err := r.Cookie("user_id")
-	if err != nil {
-		return 0, errors.New("not Authenticated")
+func AuthRequired() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		authHeader := c.GetHeader("Authorization")
+		if authHeader == "" {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "authorization header required"})
+			return
+		}
+
+		parts := strings.SplitN(authHeader, " ", 2)
+		if len(parts) != 2 || parts[0] != "Bearer" {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "invalid authorization header format"})
+			return
+		}
+
+		claims, err := auth.ValidateToken(parts[1])
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "invalid or expired token"})
+			return
+		}
+
+		c.Set("user_id", claims.UserID)
+		c.Next()
 	}
-	id, err := strconv.Atoi(cookie.Value)
-	if err != nil {
-		return 0, errors.New("Invalid user id")
-	}
-	return uint(id), nil
 }

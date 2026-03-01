@@ -1,15 +1,25 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"log"
+
+	"github.com/f18charles/piggy-bank/backend/internal/api"
+	"github.com/f18charles/piggy-bank/backend/internal/config"
+	"github.com/f18charles/piggy-bank/backend/internal/database"
+)
 
 func main() {
-	r := gin.Default()
+	// load config
+	config.Load()
 
-	r.GET("/", func(ctx *gin.Context) {
-		ctx.JSON(200, gin.H{
-			"message": "Hello Gin",
-		})
-	})
+	// Connect to database
+	database.Connect()
 
-	r.Run(":9000")
+	r := api.SetupRouter()
+
+	addr := ":" + config.App.Port
+	log.Printf("Server starting on %s", addr)
+	if err := r.Run(addr); err != nil {
+		log.Fatalf("Failed to start server: %v", err)
+	}
 }
