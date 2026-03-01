@@ -20,8 +20,7 @@ func Connect() {
 		logLevel = logger.Error
 	}
 
-	db, err := gorm.Open(postgres.Open(config.App.DatabaseURL), &gorm.Config{Logger: logger.Default.LogMode(logLevel),
-	})
+	db, err := gorm.Open(postgres.Open(config.App.DatabaseURL), &gorm.Config{Logger: logger.Default.LogMode(logLevel)})
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
