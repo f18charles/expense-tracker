@@ -20,11 +20,13 @@ func SetupRouter() *gin.Engine {
 	// API v1
 	v1 := r.Group("api/v1")
 
+	authHandler := handlers.NewAuthHandler()
+
 	// public routes
 	auth := v1.Group("/auth")
 	{
-		auth.POST("/register", handlers.Register)
-		auth.POST("/login", handlers.Login)
+		auth.POST("/register", authHandler.Register)
+		auth.POST("/login", authHandler.Login)
 	}
 
 	mpesa := v1.Group("/mpesa")
@@ -37,8 +39,8 @@ func SetupRouter() *gin.Engine {
 	protected.Use(middleware.AuthRequired())
 	{
 		// auth
-		protected.POST("/auth/logout", handlers.Logout)
-		protected.GET("/auth/profile", handlers.Profile)
+		protected.POST("/auth/logout", authHandler.Logout)
+		protected.GET("/auth/profile", authHandler.Profile)
 
 		// Accounts
 		protected.GET("/accounts", handlers.ListAccounts)
