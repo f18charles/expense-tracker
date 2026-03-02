@@ -5,5 +5,5 @@ CREATE TABLE accounts (
     type        VARCHAR(225) NOT NULL CHECK (type IN ('bank','mpesa','cash')),
     balance     NUMERIC(15,2) DEFAULT 0,
     currency    VARCHAR(10) DEFAULT 'KES',
-    created_at  TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    created_at  TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );

@@ -6,7 +6,7 @@ CREATE TABLE categories (
     color       VARCHAR(20),
     icon        VARCHAR(50),
     is_default  BOOLEAN DEFAULT false,
-    created_at  TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    created_at  TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 INSERT INTO categories (name, type, is_default) VALUES 

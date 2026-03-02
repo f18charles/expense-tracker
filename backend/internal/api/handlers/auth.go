@@ -22,7 +22,7 @@ func NewAuthHandler() *AuthHandler {
 
 type AuthResponse struct {
 	Token string `json:"token"`
-	User  any	`json:"user"`
+	User  any    `json:"user"`
 }
 
 func (ah *AuthHandler) Register(c *gin.Context) {
@@ -44,10 +44,11 @@ func (ah *AuthHandler) Register(c *gin.Context) {
 
 	utils.SuccessResponse(c, http.StatusCreated, AuthResponse{
 		Token: token,
-		User: user,
+		User:  user,
 	})
 }
-func (ah *AuthHandler)Login(c *gin.Context) {
+
+func (ah *AuthHandler) Login(c *gin.Context) {
 	var logreq services.LoginRequest
 	if err := c.ShouldBindJSON(&logreq); err != nil {
 		utils.ErrorResponse(c, http.StatusBadRequest, err.Error())
@@ -66,13 +67,13 @@ func (ah *AuthHandler)Login(c *gin.Context) {
 
 	utils.SuccessResponse(c, http.StatusOK, AuthResponse{
 		Token: token,
-		User: user,
+		User:  user,
 	})
 }
 func (ah *AuthHandler) Logout(c *gin.Context) {
-	utils.SuccessResponse(c, http.StatusOK, gin.H{"message":"Logged Out Successfully"})
+	utils.SuccessResponse(c, http.StatusOK, gin.H{"message": "Logged Out Successfully"})
 }
-func (ah *AuthHandler) Profile(c *gin.Context)  {
+func (ah *AuthHandler) Profile(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {
 		utils.ErrorResponse(c, http.StatusUnauthorized, "unauthorized")

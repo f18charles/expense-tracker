@@ -34,7 +34,7 @@ func NewAuthService() *AuthService {
 func (as *AuthService) RegisterUser(regreq RegisterRequest) (*models.User, string, error) {
 	// check if email is taken
 	_, err := as.userRepo.GetUserByEmail(regreq.Email)
-	if err != nil {
+	if err == nil {
 		return nil, "", utils.ErrAlreadyExists
 	}
 	if !errors.Is(err, utils.ErrNotFound) {

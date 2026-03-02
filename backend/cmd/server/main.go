@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/f18charles/piggy-bank/backend/internal/api"
+	api "github.com/f18charles/piggy-bank/backend/internal/api/router"
 	"github.com/f18charles/piggy-bank/backend/internal/config"
 	"github.com/f18charles/piggy-bank/backend/internal/database"
 )
