@@ -12,7 +12,7 @@ type Config struct {
 	Port           string
 	DatabaseURL    string
 	JWTSecret      string
-	JWTExpiryHours int
+	JWTExpiryMinutes int
 	AppEnv         string
 
 	MpesaConsumerKey    string
@@ -31,16 +31,16 @@ func Load() {
 		log.Println("No .env file found, reading from environment")
 	}
 
-	expiryHours, err := strconv.Atoi(getEnv("JWT_EXPIRY_HOURS", "24"))
+	expiryMinutes, err := strconv.Atoi(getEnv("JWT_EXPIRY_MINUTES", "10"))
 	if err != nil {
-		expiryHours = 24
+		expiryMinutes = 10
 	}
 
 	App = Config{
 		Port:           getEnv("PORT", "8080"),
 		DatabaseURL:    mustGetEnv("DATABASE_URL"),
 		JWTSecret:      mustGetEnv("JWT_SECRET"),
-		JWTExpiryHours: expiryHours,
+		JWTExpiryMinutes: expiryMinutes,
 		AppEnv:         getEnv("APP_ENV", "development"),
 
 		MpesaConsumerKey:    getEnv("MPESA_CONSUMER_KEY", ""),

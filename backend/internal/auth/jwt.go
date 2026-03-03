@@ -15,7 +15,7 @@ type Claims struct {
 }
 
 func GenarateToken(userID uuid.UUID) (string, error) {
-	expiry := time.Duration(config.App.JWTExpiryHours) * time.Hour
+	expiry := time.Duration(config.App.JWTExpiryMinutes) * time.Minute
 
 	claims := Claims{
 		UserID: userID,
@@ -47,3 +47,4 @@ func ValidateToken(tokenString string) (*Claims, error) {
 
 	return claims, nil
 }
+
