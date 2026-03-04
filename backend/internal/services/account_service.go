@@ -10,7 +10,7 @@ import (
 type AccCreateRequest struct {
 	Name    string  `json:"name" binding:"required"`
 	Type    string  `json:"type" binding:"required"`
-	Balance float64 `json:"balance" binding:"required"`
+	Balance float64 `json:"balance"`
 }
 
 type AccountService struct {
