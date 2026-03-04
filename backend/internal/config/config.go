@@ -9,11 +9,11 @@ import (
 )
 
 type Config struct {
-	Port           string
-	DatabaseURL    string
-	JWTSecret      string
+	Port             string
+	DatabaseURL      string
+	JWTSecret        string
 	JWTExpiryMinutes int
-	AppEnv         string
+	AppEnv           string
 
 	MpesaConsumerKey    string
 	MpesaConsumerSecret string
@@ -37,11 +37,11 @@ func Load() {
 	}
 
 	App = Config{
-		Port:           getEnv("PORT", "8080"),
-		DatabaseURL:    mustGetEnv("DATABASE_URL"),
-		JWTSecret:      mustGetEnv("JWT_SECRET"),
+		Port:             getEnv("PORT", "8080"),
+		DatabaseURL:      mustGetEnv("DATABASE_URL"),
+		JWTSecret:        mustGetEnv("JWT_SECRET"),
 		JWTExpiryMinutes: expiryMinutes,
-		AppEnv:         getEnv("APP_ENV", "development"),
+		AppEnv:           getEnv("APP_ENV", "development"),
 
 		MpesaConsumerKey:    getEnv("MPESA_CONSUMER_KEY", ""),
 		MpesaConsumerSecret: getEnv("MPESA_CONSUMER_SECRET", ""),
