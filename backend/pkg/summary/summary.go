@@ -3,17 +3,17 @@ package summary
 import (
 	"time"
 
-	"github.com/f18charles/expense-tracker/internal/models"
+	"github.com/f18charles/piggy-bank/backend/internal/models"
 	"gorm.io/gorm"
 )
 
 type MonthlySummary struct {
 	Month      time.Month
 	Year       int
-	OpeningBal int64
-	TotalExp   int64
-	CurrBal    int64
-	ByCategory map[string]int64
+	OpeningBal float64
+	TotalExp   float64
+	CurrBal    float64
+	ByCategory map[*models.Category]float64
 }
 
 func GetMonthlySummary(db *gorm.DB, userID uint, month time.Month, year int) (MonthlySummary, error) {
@@ -30,14 +30,14 @@ func GetMonthlySummary(db *gorm.DB, userID uint, month time.Month, year int) (Mo
 	summary := MonthlySummary{
 		Month:      month,
 		Year:       year,
-		ByCategory: make(map[string]int64),
+		ByCategory: make(map[*models.Category]float64),
 	}
 
-	var totalIncome int64
-	var totalExpense int64
+	var totalIncome float64
+	var totalExpense float64
 
 	for _, tx := range txs {
-		if tx.IsIncome {
+		if tx.Type == "income" {
 			totalIncome += tx.Amount
 		} else {
 			totalExpense += tx.Amount
@@ -52,10 +52,10 @@ func GetMonthlySummary(db *gorm.DB, userID uint, month time.Month, year int) (Mo
 		return MonthlySummary{}, err
 	}
 
-	var opening int64
+	var opening float64
 
 	for _, tx := range previousTxs {
-		if tx.IsIncome {
+		if tx.Type == "income" {
 			opening += tx.Amount
 		} else {
 			opening -= tx.Amount

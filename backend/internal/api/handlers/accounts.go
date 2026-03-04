@@ -90,12 +90,12 @@ func (ach *AccountHandler) GetAccount(c *gin.Context) {
 }
 
 func (ach *AccountHandler) UpdateAccount(c *gin.Context) {
-	userIDRaw, exists := c.Get("user_id")
+	userID, exists := c.Get("user_id")
 	if !exists {
 		utils.ErrorResponse(c, http.StatusUnauthorized, "unauthorized")
 		return
 	}
-	userID := userIDRaw.(uuid.UUID)
+	id := userID.(uuid.UUID)
 
 	paramID := c.Param("id")
 	accountID, err := uuid.Parse(paramID)
@@ -110,7 +110,7 @@ func (ach *AccountHandler) UpdateAccount(c *gin.Context) {
 		return
 	}
 
-	account, err := ach.accountService.AccountUpdate(userID, accountID, req)
+	account, err := ach.accountService.AccountUpdate(id, accountID, req)
 	if err != nil {
 		utils.ErrorResponse(c, http.StatusInternalServerError, "failed to update")
 		return

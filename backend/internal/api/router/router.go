@@ -21,6 +21,8 @@ func SetupRouter() *gin.Engine {
 	v1 := r.Group("api/v1")
 
 	authHandler := handlers.NewAuthHandler()
+	accountHandler := handlers.NewAccHandler()
+	txHandler := handlers.NewTxHandler()
 
 	// public routes
 	auth := v1.Group("/auth")
@@ -43,19 +45,18 @@ func SetupRouter() *gin.Engine {
 		protected.GET("/auth/profile", authHandler.Profile)
 
 		// Accounts
-		protected.GET("/accounts", handlers.ListAccounts)
-		protected.POST("/accounts", handlers.CreateAccount)
-		protected.GET("/accounts/:id", handlers.GetAccount)
-		protected.PUT("/accounts/:id", handlers.UpdateAccount)
-		protected.DELETE("/accounts/:id", handlers.DeleteAccount)
+		protected.GET("/accounts", accountHandler.ListAccounts)
+		protected.POST("/accounts", accountHandler.CreateAccount)
+		protected.GET("/accounts/:id", accountHandler.GetAccount)
+		protected.PUT("/accounts/:id", accountHandler.UpdateAccount)
+		protected.DELETE("/accounts/:id", accountHandler.DeleteAccount)
 
 		// Transactions
-		protected.GET("/transactions", handlers.ListTransactions)
-		protected.POST("/transactions", handlers.CreateTransactions)
-		protected.GET("/transactions/:id", handlers.GetTransaction)
-		protected.PUT("/transactions/:id", handlers.UpdateTransaction)
-		protected.DELETE("/transactions/:id", handlers.DeleteTransaction)
-		protected.GET("/transactions/export", handlers.ExportTransactions)
+		protected.GET("/transactions", txHandler.ListTransactions)
+		protected.POST("/transactions", txHandler.CreateTransactions)
+		protected.GET("/transactions/:id", txHandler.GetTransaction)
+		protected.PUT("/transactions/:id", txHandler.UpdateTransaction)
+		protected.GET("/transactions/export", txHandler.ExportTransactions)
 
 		// Categories
 		protected.GET("/categories", handlers.ListCategories)

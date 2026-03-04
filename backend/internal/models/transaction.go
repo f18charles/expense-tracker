@@ -20,6 +20,6 @@ type Transaction struct {
 	CreatedAt       time.Time  `json:"created_at"`
 
 	User     User      `gorm:"foreignKey:UserID" json:"-"`
-	Account  Account   `gorm:"foreignKey:AccountID" json:"account,omitempty"`
+	Account  Account   `gorm:"foreignKey:AccountID" json:"account"`
 	Category *Category `gorm:"foreignKey:CategoryID" json:"category,omitempty"`
 }
