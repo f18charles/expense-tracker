@@ -20,16 +20,7 @@ func NewAccHandler() *AccountHandler {
 }
 
 func (ach *AccountHandler) ListAccounts(c *gin.Context) {
-	userID, exists := c.Get("user_id")
-	if !exists {
-		utils.ErrorResponse(c, http.StatusUnauthorized, "unauthorized")
-		return
-	}
-	id, ok := userID.(uuid.UUID)
-	if !ok {
-		utils.ErrorResponse(c, http.StatusInternalServerError, "invalid user")
-		return
-	}
+	id := utils.ConfirmAuthedUser(c)
 	accounts, err := ach.accountService.AccountList(id)
 	if err != nil {
 		utils.ErrorResponse(c, http.StatusNotFound, "no accounts found")
@@ -40,16 +31,7 @@ func (ach *AccountHandler) ListAccounts(c *gin.Context) {
 }
 
 func (ach *AccountHandler) CreateAccount(c *gin.Context) {
-	userID, exists := c.Get("user_id")
-	if !exists {
-		utils.ErrorResponse(c, http.StatusUnauthorized, "unauthorized")
-		return
-	}
-	id, ok := userID.(uuid.UUID)
-	if !ok {
-		utils.ErrorResponse(c, http.StatusInternalServerError, "invalid user")
-		return
-	}
+	id := utils.ConfirmAuthedUser(c)
 	var accreq services.AccCreateRequest
 	if err := c.ShouldBindJSON(&accreq); err != nil {
 		utils.ErrorResponse(c, http.StatusBadRequest, err.Error())
@@ -64,16 +46,7 @@ func (ach *AccountHandler) CreateAccount(c *gin.Context) {
 }
 
 func (ach *AccountHandler) GetAccount(c *gin.Context) {
-	userID, exists := c.Get("user_id")
-	if !exists {
-		utils.ErrorResponse(c, http.StatusUnauthorized, "unauthorized")
-		return
-	}
-	id, ok := userID.(uuid.UUID)
-	if !ok {
-		utils.ErrorResponse(c, http.StatusInternalServerError, "invalid user")
-		return
-	}
+	id := utils.ConfirmAuthedUser(c)
 	paramID := c.Param("id")
 	accountID, err := uuid.Parse(paramID)
 	if err != nil {
@@ -90,12 +63,7 @@ func (ach *AccountHandler) GetAccount(c *gin.Context) {
 }
 
 func (ach *AccountHandler) UpdateAccount(c *gin.Context) {
-	userID, exists := c.Get("user_id")
-	if !exists {
-		utils.ErrorResponse(c, http.StatusUnauthorized, "unauthorized")
-		return
-	}
-	id := userID.(uuid.UUID)
+	id := utils.ConfirmAuthedUser(c)
 
 	paramID := c.Param("id")
 	accountID, err := uuid.Parse(paramID)
