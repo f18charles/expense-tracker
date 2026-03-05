@@ -36,7 +36,7 @@ func (gr *GoalRepo) UpdateGoal(goal *models.Goal) error {
 	return database.DB.Save(goal).Error
 }
 
-func ListGoalsByUser(user_id uuid.UUID) ([]models.Goal, error) {
+func (gr *GoalRepo) ListGoalsByUser(user_id uuid.UUID) ([]models.Goal, error) {
 	goals := []models.Goal{}
 	result := database.DB.Where("user_id = ?", user_id).Find(&goals)
 	if result.Error != nil {

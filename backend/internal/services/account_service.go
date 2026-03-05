@@ -25,7 +25,7 @@ func NewAccService() *AccountService {
 
 type AccUpdateRequest struct {
 	Name string `json:"name"`
-	Type string `json:"type"`
+	Balance float64 `json:"balance"`
 }
 
 func (as *AccountService) AccountCreate(user_id uuid.UUID, req AccCreateRequest) (*models.Account, error) {
@@ -68,8 +68,8 @@ func (as *AccountService) AccountUpdate(userID, accID uuid.UUID, req AccUpdateRe
 	if req.Name != "" {
 		account.Name = req.Name
 	}
-	if req.Type != "" {
-		account.Type = req.Type
+	if req.Balance != 0 {
+		account.Balance = req.Balance
 	}
 	if err := as.accountRepo.UpdateAccount(account); err != nil {
 		return nil, err
