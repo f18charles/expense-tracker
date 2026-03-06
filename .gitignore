@@ -22,3 +22,7 @@ lib
 # Dependency directories (remove the comment below to include it)
 # vendor/
 .env
+
+app.db
+.gitignore
+CLAUDE.md
