@@ -71,11 +71,46 @@ func (gh *GoalHandler) GetGoal(c *gin.Context) {
 
 }
 
-func UpdateGoal(c *gin.Context) {
+func (gh *GoalHandler) UpdateGoal(c *gin.Context) {
+	id := utils.ConfirmAuthedUser(c)
+	if id == uuid.Nil {
+		return
+	}
+	param_id := c.Param("id")
+	goal_id, err := uuid.Parse(param_id)
+	if err != nil {
+		utils.ErrorResponse(c, http.StatusBadRequest, "invalid goal id")
+		return
+	}
+	var goalreq services.GoalUpdateRequest
+	if err := c.ShouldBindJSON(&goalreq); err != nil {
+		utils.ErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+	goal, err := gh.goalService.GoalUpdate(id, goal_id, goalreq)
+	if err != nil {
+		utils.ErrorResponse(c, http.StatusInternalServerError, "failed to update account")
+		return
+	}
+	utils.SuccessResponse(c, http.StatusOK, goal)
 
 }
 
-func DeleteGoal(c *gin.Context) {
-
+func (gh *GoalHandler) DeleteGoal(c *gin.Context) {
+	id := utils.ConfirmAuthedUser(c)
+	if id == uuid.Nil {
+		return
+	}
+	param_id := c.Param("id")
+	goal_id, err := uuid.Parse(param_id)
+	if err != nil {
+		utils.ErrorResponse(c, http.StatusBadRequest, "invalid goal id")
+		return
+	}
+	err = gh.goalService.GoalDelete(id, goal_id)
+	if err != nil {
+		utils.ErrorResponse(c, http.StatusInternalServerError, "failed to delete goal")
+		return
+	}
+	utils.SuccessResponse(c, http.StatusOK, gin.H{"message": "goal deleted successfully"})
 }
-
