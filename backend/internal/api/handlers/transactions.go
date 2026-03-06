@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/f18charles/piggy-bank/backend/internal/services"
@@ -122,4 +123,35 @@ func (th *TransactionHandler) UpdateTransaction(c *gin.Context) {
 }
 
 // ExportTransactions exports transactions (CSV/other) for the user.
-func (th *TransactionHandler) ExportTransactions(c *gin.Context) {}
+func (th *TransactionHandler) ExportTransactions(c *gin.Context) {
+	userID, exists := c.Get("user_id")
+	if !exists {
+		utils.ErrorResponse(c, http.StatusUnauthorized, "unauthorized")
+		return
+	}
+	id, ok := userID.(uuid.UUID)
+	if !ok {
+		utils.ErrorResponse(c, http.StatusInternalServerError, "invalid user")
+		return
+	}
+
+	format := c.DefaultQuery("format", "csv")
+	data, contentType, err := th.transactionService.ExportTx(id, format)
+	if err != nil {
+		if err == utils.ErrNotFound {
+			utils.ErrorResponse(c, http.StatusNotFound, "no transactions found for the specified period")
+			return
+		}
+		utils.ErrorResponse(c, http.StatusInternalServerError, "failed to export transactions")
+		return
+	}
+
+	ext := "csv"
+	if format == "pdf" {
+		ext = "pdf"
+	}
+	filename := fmt.Sprintf("transactions_last_3_months.%s", ext)
+	c.Header("Content-Description", "File Transfer")
+	c.Header("Content-Disposition", fmt.Sprintf("attachment; filename=%s", filename))
+	c.Data(http.StatusOK, contentType, data)
+}
