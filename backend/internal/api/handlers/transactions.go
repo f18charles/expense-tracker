@@ -19,6 +19,7 @@ func NewTxHandler() *TransactionHandler {
 	}
 }
 
+// ListTransactions returns a paginated list of transactions for the user.
 func (th *TransactionHandler) ListTransactions(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {
@@ -38,6 +39,8 @@ func (th *TransactionHandler) ListTransactions(c *gin.Context) {
 
 	utils.SuccessResponse(c, http.StatusOK, txs)
 }
+
+// CreateTransactions records a new transaction for the authenticated user.
 func (th *TransactionHandler) CreateTransactions(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {
@@ -62,6 +65,7 @@ func (th *TransactionHandler) CreateTransactions(c *gin.Context) {
 	utils.SuccessResponse(c, http.StatusOK, tx)
 }
 
+// GetTransaction retrieves a single transaction by ID for the authenticated user.
 func (th *TransactionHandler) GetTransaction(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {
@@ -87,6 +91,7 @@ func (th *TransactionHandler) GetTransaction(c *gin.Context) {
 	utils.SuccessResponse(c, http.StatusOK, tx)
 }
 
+// UpdateTransaction updates an existing transaction owned by the user.
 func (th *TransactionHandler) UpdateTransaction(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {
@@ -116,4 +121,5 @@ func (th *TransactionHandler) UpdateTransaction(c *gin.Context) {
 	utils.SuccessResponse(c, http.StatusOK, tx)
 }
 
+// ExportTransactions exports transactions (CSV/other) for the user.
 func (th *TransactionHandler) ExportTransactions(c *gin.Context) {}

@@ -8,6 +8,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// AuthRequired is a Gin middleware that enforces the presence of a valid
+// `Authorization: Bearer <token>` header. On success it stores `user_id` in
+// the request context for downstream handlers to use.
 func AuthRequired() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")

@@ -5,6 +5,8 @@ import (
 	"net/http"
 )
 
+// RenderTemplate parses and executes the provided page templates and writes the
+// result to the http.ResponseWriter. Intended for any server-rendered pages.
 func RenderTemplate(w http.ResponseWriter, page string, data any) {
 	tmpl, err := template.ParseFiles("web/template/base.html", "web/template/sidebar.html", "web/template/"+page)
 	if err != nil {
@@ -18,6 +20,7 @@ func RenderTemplate(w http.ResponseWriter, page string, data any) {
 	}
 }
 
+// AuthTemplate renders authentication-specific templates (login/register).
 func AuthTemplate(w http.ResponseWriter, page string, data any) {
 	tmpl, err := template.ParseFiles("web/template/authentication/base.html", "web/template/authentication/"+page)
 	if err != nil {

@@ -13,6 +13,7 @@ type BudgetServices struct {
 	budgetRepo *repository.BudgetRepo
 }
 
+// NewBudgetRepo creates and returns a BudgetServices instance with an initialized repository.
 func NewBudgetRepo() *BudgetServices {
 	return &BudgetServices{
 		budgetRepo: repository.NewBudgetRepo(),
@@ -21,31 +22,32 @@ func NewBudgetRepo() *BudgetServices {
 
 type BudgetCreateRequest struct {
 	CategoryID *uuid.UUID `json:"category_id" binding:"required"`
-	Amount float64 `json:"amount"`
-	Spent float64 `json:"spent"`
-	Period string `json:"period" binding:"required"`
-	StartDate *time.Time `json:"start_date"`
-	EndDate *time.Time	`json:"end_date"`
-} 
+	Amount     float64    `json:"amount"`
+	Spent      float64    `json:"spent"`
+	Period     string     `json:"period" binding:"required"`
+	StartDate  *time.Time `json:"start_date"`
+	EndDate    *time.Time `json:"end_date"`
+}
 
 type BudgetUpdateRequest struct {
 	CategoryID *uuid.UUID `json:"category_id"`
-	Amount float64 `json:"amount"`
-	Spent float64 `json:"spent"`
-	Period string `json:"period"`
-	StartDate *time.Time `json:"start_date"`
-	EndDate *time.Time	`json:"end_date"`
+	Amount     float64    `json:"amount"`
+	Spent      float64    `json:"spent"`
+	Period     string     `json:"period"`
+	StartDate  *time.Time `json:"start_date"`
+	EndDate    *time.Time `json:"end_date"`
 }
 
+// BudgetCreate creates a new budget for the given user based on the request and saves it via the repository.
 func (bs *BudgetServices) BudgetCreate(user_id uuid.UUID, req BudgetCreateRequest) (*models.Budget, error) {
 	budget := &models.Budget{
-		UserID: user_id,
+		UserID:     user_id,
 		CategoryID: *req.CategoryID,
-		Amount: req.Amount,
-		Spent: req.Amount,
-		Period: req.Period,
-		StartDate: *req.StartDate,
-		EndDate: *req.EndDate,
+		Amount:     req.Amount,
+		Spent:      req.Amount,
+		Period:     req.Period,
+		StartDate:  *req.StartDate,
+		EndDate:    *req.EndDate,
 	}
 	if err := bs.budgetRepo.CreateBudget(budget); err != nil {
 		return nil, err
@@ -53,6 +55,7 @@ func (bs *BudgetServices) BudgetCreate(user_id uuid.UUID, req BudgetCreateReques
 	return budget, nil
 }
 
+// BudgetGet retrieves a budget by ID and ensures the requesting user owns it.
 func (bs *BudgetServices) BudgetGet(user_id, budget_id uuid.UUID) (*models.Budget, error) {
 	budget, err := bs.budgetRepo.GetBudgetByID(budget_id)
 	if err != nil {
@@ -64,6 +67,7 @@ func (bs *BudgetServices) BudgetGet(user_id, budget_id uuid.UUID) (*models.Budge
 	return budget, nil
 }
 
+// BudgetUpdate updates allowed fields on a budget after verifying ownership.
 func (bs *BudgetServices) BudgetUpdate(budget_id, user_id uuid.UUID, req BudgetUpdateRequest) (*models.Budget, error) {
 	budget, err := bs.budgetRepo.GetBudgetByID(budget_id)
 	if err != nil {
@@ -72,15 +76,28 @@ func (bs *BudgetServices) BudgetUpdate(budget_id, user_id uuid.UUID, req BudgetU
 	if budget.UserID != user_id {
 		return nil, utils.ErrForbidden
 	}
-	if req.CategoryID != nil {budget.CategoryID = *req.CategoryID}
-	if req.Amount != 0 {budget.Amount = req.Amount}
-	if req.Spent != 0 {budget.Spent = req.Spent}
-	if req.Period != "" {budget.Period = req.Period}
-	if req.StartDate != nil {budget.StartDate = *req.StartDate}
-	if req.EndDate != nil {budget.EndDate = *req.EndDate}
+	if req.CategoryID != nil {
+		budget.CategoryID = *req.CategoryID
+	}
+	if req.Amount != 0 {
+		budget.Amount = req.Amount
+	}
+	if req.Spent != 0 {
+		budget.Spent = req.Spent
+	}
+	if req.Period != "" {
+		budget.Period = req.Period
+	}
+	if req.StartDate != nil {
+		budget.StartDate = *req.StartDate
+	}
+	if req.EndDate != nil {
+		budget.EndDate = *req.EndDate
+	}
 	return budget, nil
 }
 
+// BudgetList returns all budgets that belong to the specified user.
 func (bs *BudgetServices) BudgetList(user_id uuid.UUID) ([]models.Budget, error) {
 	budgets, err := bs.budgetRepo.ListBudgetsByUser(user_id)
 	if err != nil {
@@ -89,6 +106,7 @@ func (bs *BudgetServices) BudgetList(user_id uuid.UUID) ([]models.Budget, error)
 	return budgets, nil
 }
 
+// BudgetDelete removes a budget by ID using the repository.
 func (bs *BudgetServices) BudgetDelete(budget_id uuid.UUID) error {
 	if err := bs.budgetRepo.DeleteBudget(budget_id); err != nil {
 		return err

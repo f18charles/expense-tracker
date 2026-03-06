@@ -7,6 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// CORS returns a middleware that sets permissive CORS headers suitable for
+// the frontend dev environment. It short-circuits OPTIONS requests with 204.
 func CORS() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		origin := "http://localhost:5173"

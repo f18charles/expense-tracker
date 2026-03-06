@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type GoalRepo struct {}
+type GoalRepo struct{}
 
 func NewGoalRepo() *GoalRepo {
 	return &GoalRepo{}

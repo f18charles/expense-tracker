@@ -20,7 +20,8 @@ func NewBudgetHandler() *BudgetHandler {
 	}
 }
 
-func (bh *BudgetHandler) Listbudgets(c *gin.Context)  {
+// Listbudgets returns all budgets for the authenticated user.
+func (bh *BudgetHandler) Listbudgets(c *gin.Context) {
 	id, err := auth.ConfirmAuthedUser(c)
 	if err != nil {
 		utils.ErrorResponse(c, http.StatusUnauthorized, err.Error())
@@ -34,6 +35,7 @@ func (bh *BudgetHandler) Listbudgets(c *gin.Context)  {
 	utils.SuccessResponse(c, http.StatusOK, budgets)
 }
 
+// CreateBudget creates a new budget for a category for the authenticated user.
 func (bh *BudgetHandler) CreateBudget(c *gin.Context) {
 	id, err := auth.ConfirmAuthedUser(c)
 	if err != nil {
@@ -53,7 +55,8 @@ func (bh *BudgetHandler) CreateBudget(c *gin.Context) {
 	utils.SuccessResponse(c, http.StatusOK, budget)
 }
 
-func (bh *BudgetHandler) GetBudget(c *gin.Context)    {
+// GetBudget retrieves a specific budget by ID for the authenticated user.
+func (bh *BudgetHandler) GetBudget(c *gin.Context) {
 	id, err := auth.ConfirmAuthedUser(c)
 	if err != nil {
 		utils.ErrorResponse(c, http.StatusUnauthorized, err.Error())
@@ -73,6 +76,7 @@ func (bh *BudgetHandler) GetBudget(c *gin.Context)    {
 	utils.SuccessResponse(c, http.StatusOK, budget)
 }
 
+// UpdateBudget updates an existing budget for the authenticated user.
 func (bh *BudgetHandler) UpdateBudget(c *gin.Context) {
 	id, err := auth.ConfirmAuthedUser(c)
 	if err != nil {
@@ -92,12 +96,13 @@ func (bh *BudgetHandler) UpdateBudget(c *gin.Context) {
 	}
 	budget, err := bh.budgetService.BudgetUpdate(budget_id, id, req)
 	if err != nil {
-		utils.ErrorResponse(c, http.StatusInternalServerError,"failed to update budget")
+		utils.ErrorResponse(c, http.StatusInternalServerError, "failed to update budget")
 		return
 	}
 	utils.SuccessResponse(c, http.StatusOK, budget)
 }
 
+// DeleteBudget deletes a budget owned by the authenticated user.
 func (bh *BudgetHandler) DeleteBudget(c *gin.Context) {
 	_, err := auth.ConfirmAuthedUser(c)
 	if err != nil {
@@ -115,6 +120,5 @@ func (bh *BudgetHandler) DeleteBudget(c *gin.Context) {
 		utils.ErrorResponse(c, http.StatusInternalServerError, "failed to delete budget")
 		return
 	}
-	utils.SuccessResponse(c, http.StatusOK, gin.H{"message":"budget deleted successfully"})
+	utils.SuccessResponse(c, http.StatusOK, gin.H{"message": "budget deleted successfully"})
 }
-

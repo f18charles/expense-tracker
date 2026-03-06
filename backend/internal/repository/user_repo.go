@@ -16,11 +16,14 @@ func NewUserRepository() *UserRepository {
 	return &UserRepository{}
 }
 
+// CreateUser inserts a new user record into the database.
 func (ur *UserRepository) CreateUser(user *models.User) error {
 	result := database.DB.Create(user)
 	return result.Error
 }
 
+// GetUserByEmail looks up a user by email. Returns utils.ErrNotFound when
+// the user does not exist.
 func (ur *UserRepository) GetUserByEmail(email string) (*models.User, error) {
 	var user models.User
 	result := database.DB.Where("email = ?", email).First(&user)
@@ -33,6 +36,8 @@ func (ur *UserRepository) GetUserByEmail(email string) (*models.User, error) {
 	return &user, nil
 }
 
+// GetUserByID retrieves a user by UUID, returning utils.ErrNotFound when
+// not present.
 func (ur *UserRepository) GetUserByID(id uuid.UUID) (*models.User, error) {
 	var user models.User
 	result := database.DB.Where("id = ?", id).First(&user)
@@ -45,6 +50,7 @@ func (ur *UserRepository) GetUserByID(id uuid.UUID) (*models.User, error) {
 	return &user, nil
 }
 
+// UpdateUser updates an existing user record in the database.
 func (ur *UserRepository) UpdateUser(user *models.User) error {
 	result := database.DB.Save(user)
 	return result.Error

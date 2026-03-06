@@ -20,6 +20,7 @@ func NewAccHandler() *AccountHandler {
 	}
 }
 
+// ListAccounts returns the list of accounts for the authenticated user.
 func (ach *AccountHandler) ListAccounts(c *gin.Context) {
 	id, err := auth.ConfirmAuthedUser(c)
 	if err != nil {
@@ -35,6 +36,7 @@ func (ach *AccountHandler) ListAccounts(c *gin.Context) {
 	utils.SuccessResponse(c, http.StatusOK, accounts)
 }
 
+// CreateAccount creates a new account for the authenticated user.
 func (ach *AccountHandler) CreateAccount(c *gin.Context) {
 	id, err := auth.ConfirmAuthedUser(c)
 	if err != nil {
@@ -54,6 +56,7 @@ func (ach *AccountHandler) CreateAccount(c *gin.Context) {
 	utils.SuccessResponse(c, http.StatusOK, account)
 }
 
+// GetAccount retrieves a single account by id for the authenticated user.
 func (ach *AccountHandler) GetAccount(c *gin.Context) {
 	id, err := auth.ConfirmAuthedUser(c)
 	if err != nil {
@@ -75,6 +78,7 @@ func (ach *AccountHandler) GetAccount(c *gin.Context) {
 	utils.SuccessResponse(c, http.StatusOK, account)
 }
 
+// UpdateAccount updates fields of an account owned by the authenticated user.
 func (ach *AccountHandler) UpdateAccount(c *gin.Context) {
 	id, err := auth.ConfirmAuthedUser(c)
 	if err != nil {
@@ -102,9 +106,9 @@ func (ach *AccountHandler) UpdateAccount(c *gin.Context) {
 	}
 
 	utils.SuccessResponse(c, http.StatusOK, account)
-
 }
 
+// DeleteAccount removes an account owned by the authenticated user.
 func (ach *AccountHandler) DeleteAccount(c *gin.Context) {
 	id, err := auth.ConfirmAuthedUser(c)
 	if err != nil {
@@ -128,5 +132,4 @@ func (ach *AccountHandler) DeleteAccount(c *gin.Context) {
 	}
 
 	utils.SuccessResponse(c, http.StatusOK, gin.H{"message": "deleted"})
-
 }

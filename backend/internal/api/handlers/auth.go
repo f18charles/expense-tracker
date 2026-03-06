@@ -25,6 +25,8 @@ type AuthResponse struct {
 	User  any    `json:"user"`
 }
 
+// Register handles POST /auth/register: validates request, registers a new
+// user via AuthService and returns the created user and JWT.
 func (ah *AuthHandler) Register(c *gin.Context) {
 	var regreq services.RegisterRequest
 	if err := c.ShouldBindJSON(&regreq); err != nil {
@@ -48,6 +50,8 @@ func (ah *AuthHandler) Register(c *gin.Context) {
 	})
 }
 
+// Login handles POST /auth/login: validates credentials and returns a JWT on
+// success.
 func (ah *AuthHandler) Login(c *gin.Context) {
 	var logreq services.LoginRequest
 	if err := c.ShouldBindJSON(&logreq); err != nil {
@@ -70,9 +74,13 @@ func (ah *AuthHandler) Login(c *gin.Context) {
 		User:  user,
 	})
 }
+
+// Logout returns a success response for client-side logout flows.
 func (ah *AuthHandler) Logout(c *gin.Context) {
 	utils.SuccessResponse(c, http.StatusOK, gin.H{"message": "Logged Out Successfully"})
 }
+
+// Profile returns the authenticated user's profile (GET /auth/profile).
 func (ah *AuthHandler) Profile(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {

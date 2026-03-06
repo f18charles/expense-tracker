@@ -17,6 +17,7 @@ type AccountService struct {
 	accountRepo *repository.AccountRepo
 }
 
+// NewAccService constructs an AccountService with its repository dependency.
 func NewAccService() *AccountService {
 	return &AccountService{
 		accountRepo: repository.NewAccountRepo(),
@@ -24,10 +25,11 @@ func NewAccService() *AccountService {
 }
 
 type AccUpdateRequest struct {
-	Name string `json:"name"`
+	Name    string  `json:"name"`
 	Balance float64 `json:"balance"`
 }
 
+// AccountCreate creates and persists a new account for the provided user.
 func (as *AccountService) AccountCreate(user_id uuid.UUID, req AccCreateRequest) (*models.Account, error) {
 	// create account
 	account := &models.Account{
@@ -45,6 +47,7 @@ func (as *AccountService) AccountCreate(user_id uuid.UUID, req AccCreateRequest)
 	return account, nil
 }
 
+// GetAccount retrieves and verifies ownership of an account.
 func (as *AccountService) GetAccount(userID, accID uuid.UUID) (*models.Account, error) {
 	account, err := as.accountRepo.GetAccountByID(accID)
 	if err != nil {
@@ -57,6 +60,7 @@ func (as *AccountService) GetAccount(userID, accID uuid.UUID) (*models.Account, 
 	return account, nil
 }
 
+// AccountUpdate updates account fields owned by the user.
 func (as *AccountService) AccountUpdate(userID, accID uuid.UUID, req AccUpdateRequest) (*models.Account, error) {
 	account, err := as.accountRepo.GetAccountByID(accID)
 	if err != nil {
@@ -77,6 +81,7 @@ func (as *AccountService) AccountUpdate(userID, accID uuid.UUID, req AccUpdateRe
 	return account, nil
 }
 
+// AccountList returns all accounts belonging to a user.
 func (as *AccountService) AccountList(user_id uuid.UUID) ([]models.Account, error) {
 	accounts, err := as.accountRepo.ListAccountByUser(user_id)
 	if err != nil {
@@ -85,6 +90,7 @@ func (as *AccountService) AccountList(user_id uuid.UUID) ([]models.Account, erro
 	return accounts, nil
 }
 
+// AccountDelete deletes a user's account.
 func (as *AccountService) AccountDelete(userID, accID uuid.UUID) error {
 	account, err := as.accountRepo.GetAccountByID(accID)
 	if err != nil {
@@ -96,5 +102,4 @@ func (as *AccountService) AccountDelete(userID, accID uuid.UUID) error {
 	}
 
 	return as.accountRepo.DeleteAccount(accID)
-
 }

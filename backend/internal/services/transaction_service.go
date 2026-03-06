@@ -21,6 +21,7 @@ type TxService struct {
 	txRepo *repository.TransactionRepo
 }
 
+// NewTxService initializes and returns a TxService with its repository.
 func NewTxService() *TxService {
 	return &TxService{
 		txRepo: repository.NewTransactionRepo(),
@@ -31,6 +32,7 @@ type TxUpdateRequest struct {
 	Description string `json:"description"`
 }
 
+// TxCreate creates a new transaction record for a user and saves it via the repository.
 func (ts *TxService) TxCreate(user_id uuid.UUID, req TxCreateRequest) (*models.Transaction, error) {
 	tx := &models.Transaction{
 		CategoryID:    req.CategoryID,
@@ -47,6 +49,7 @@ func (ts *TxService) TxCreate(user_id uuid.UUID, req TxCreateRequest) (*models.T
 	return tx, nil
 }
 
+// TxGet retrieves a transaction by ID and ensures the requesting user owns it.
 func (ts *TxService) TxGet(user_id, txID uuid.UUID) (*models.Transaction, error) {
 	tx, err := ts.txRepo.GetTransactionByID(txID)
 	if err != nil {
@@ -58,6 +61,7 @@ func (ts *TxService) TxGet(user_id, txID uuid.UUID) (*models.Transaction, error)
 	return tx, nil
 }
 
+// TxUpdate updates mutable fields on a transaction after ownership verification.
 func (ts *TxService) TxUpdate(user_id, txID uuid.UUID, req TxUpdateRequest) (*models.Transaction, error) {
 	tx, err := ts.txRepo.GetTransactionByID(txID)
 	if err != nil {
@@ -75,6 +79,7 @@ func (ts *TxService) TxUpdate(user_id, txID uuid.UUID, req TxUpdateRequest) (*mo
 	return tx, nil
 }
 
+// TxList returns all transactions for the specified user.
 func (ts *TxService) TxList(user_id uuid.UUID) ([]models.Transaction, error) {
 	txs, err := ts.txRepo.ListTransactionsByUser(user_id)
 	if err != nil {

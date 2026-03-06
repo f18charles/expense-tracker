@@ -20,7 +20,8 @@ func NewGoalHandler() *GoalHandler {
 	}
 }
 
-func (gh *GoalHandler) ListGoals(c *gin.Context)  {
+// ListGoals returns all goals for the authenticated user.
+func (gh *GoalHandler) ListGoals(c *gin.Context) {
 	id, err := auth.ConfirmAuthedUser(c)
 	if err != nil {
 		utils.ErrorResponse(c, http.StatusUnauthorized, err.Error())
@@ -34,6 +35,7 @@ func (gh *GoalHandler) ListGoals(c *gin.Context)  {
 	utils.SuccessResponse(c, http.StatusOK, goal)
 }
 
+// CreateGoal creates a new savings goal for the authenticated user.
 func (gh *GoalHandler) CreateGoal(c *gin.Context) {
 	id, err := auth.ConfirmAuthedUser(c)
 	if err != nil {
@@ -53,6 +55,7 @@ func (gh *GoalHandler) CreateGoal(c *gin.Context) {
 	utils.SuccessResponse(c, http.StatusOK, goal)
 }
 
+// GetGoal returns a single goal by id for the authenticated user.
 func (gh *GoalHandler) GetGoal(c *gin.Context) {
 	id, err := auth.ConfirmAuthedUser(c)
 	if err != nil {
@@ -72,9 +75,9 @@ func (gh *GoalHandler) GetGoal(c *gin.Context) {
 		return
 	}
 	utils.SuccessResponse(c, http.StatusOK, goal)
-
 }
 
+// UpdateGoal updates fields on a user's goal.
 func (gh *GoalHandler) UpdateGoal(c *gin.Context) {
 	id, err := auth.ConfirmAuthedUser(c)
 	if err != nil {
@@ -98,9 +101,9 @@ func (gh *GoalHandler) UpdateGoal(c *gin.Context) {
 		return
 	}
 	utils.SuccessResponse(c, http.StatusOK, goal)
-
 }
 
+// DeleteGoal deletes a user's goal.
 func (gh *GoalHandler) DeleteGoal(c *gin.Context) {
 	id, err := auth.ConfirmAuthedUser(c)
 	if err != nil {

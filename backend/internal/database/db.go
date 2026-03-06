@@ -11,6 +11,8 @@ import (
 
 var DB *gorm.DB
 
+// Connect initializes the global database connection using settings from
+// config.App. It sets connection pool parameters and assigns the global DB.
 func Connect() {
 	var logLevel logger.LogLevel
 

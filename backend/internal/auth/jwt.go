@@ -14,7 +14,8 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-// GenerateToken creates a signed JWT for the provided user ID.
+// GenerateToken creates a signed JWT for the provided user ID using the
+// application secret and expiry configured in `config.App`.
 func GenerateToken(userID uuid.UUID) (string, error) {
 	expiry := time.Duration(config.App.JWTExpiryMinutes) * time.Minute
 
@@ -30,6 +31,8 @@ func GenerateToken(userID uuid.UUID) (string, error) {
 	return token.SignedString([]byte(config.App.JWTSecret))
 }
 
+// ValidateToken parses and validates a JWT string returning its Claims when
+// valid. Returns an error for invalid, expired, or malformed tokens.
 func ValidateToken(tokenString string) (*Claims, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(t *jwt.Token) (any, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {

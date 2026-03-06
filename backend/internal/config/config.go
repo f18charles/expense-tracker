@@ -26,6 +26,8 @@ type Config struct {
 
 var App Config
 
+// Load reads environment variables (optionally from .env) and populates the
+// package-level App configuration value.
 func Load() {
 	if err := godotenv.Load(); err != nil {
 		log.Println("No .env file found, reading from environment")
@@ -53,6 +55,7 @@ func Load() {
 	}
 }
 
+// getEnv returns the environment variable value or the provided fallback.
 func getEnv(key, fallback string) string {
 	if value, ok := os.LookupEnv(key); ok {
 		return value
@@ -60,6 +63,8 @@ func getEnv(key, fallback string) string {
 	return fallback
 }
 
+// mustGetEnv returns the value for a required env var or logs/fails when
+// it's missing.
 func mustGetEnv(key string) string {
 	value, ok := os.LookupEnv(key)
 	if !ok || value == "" {

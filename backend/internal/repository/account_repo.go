@@ -16,11 +16,14 @@ func NewAccountRepo() *AccountRepo {
 	return &AccountRepo{}
 }
 
+// CreateAccount persists a new account record.
 func (ar *AccountRepo) CreateAccount(account *models.Account) error {
 	result := database.DB.Create(account)
 	return result.Error
 }
 
+// GetAccountByID fetches an account by UUID. Returns utils.ErrNotFound when
+// the account is missing.
 func (ar *AccountRepo) GetAccountByID(accID uuid.UUID) (*models.Account, error) {
 	var account models.Account
 	result := database.DB.Where("id = ?", accID).First(&account)
@@ -33,11 +36,13 @@ func (ar *AccountRepo) GetAccountByID(accID uuid.UUID) (*models.Account, error) 
 	return &account, nil
 }
 
+// UpdateAccount saves changes to an account.
 func (ar *AccountRepo) UpdateAccount(account *models.Account) error {
 	result := database.DB.Save(account)
 	return result.Error
 }
 
+// ListAccountByUser returns all accounts for a specific user.
 func (ar *AccountRepo) ListAccountByUser(user_id uuid.UUID) ([]models.Account, error) {
 	accounts := []models.Account{}
 	result := database.DB.Where("user_id = ?", user_id).Find(&accounts)
@@ -47,6 +52,7 @@ func (ar *AccountRepo) ListAccountByUser(user_id uuid.UUID) ([]models.Account, e
 	return accounts, nil
 }
 
+// DeleteAccount deletes an account by id.
 func (ar *AccountRepo) DeleteAccount(id uuid.UUID) error {
 	result := database.DB.Delete(&models.Account{}, "id = ?", id)
 	if result.Error != nil {

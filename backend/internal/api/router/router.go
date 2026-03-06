@@ -8,6 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// SetupRouter constructs and returns the Gin engine with all routes and
+// middleware registered. Use this to start the HTTP server in main.
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
 

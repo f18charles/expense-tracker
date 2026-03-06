@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type BudgetRepo struct {}
+type BudgetRepo struct{}
 
 func NewBudgetRepo() *BudgetRepo {
 	return &BudgetRepo{}

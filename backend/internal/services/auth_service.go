@@ -10,12 +10,14 @@ import (
 	"github.com/google/uuid"
 )
 
+// RegisterRequest is the payload for user registration.
 type RegisterRequest struct {
 	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required,min=8"`
 	FullName string `json:"full_name" binding:"required"`
 }
 
+// LoginRequest is the payload for user login.
 type LoginRequest struct {
 	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required"`
@@ -25,12 +27,14 @@ type AuthService struct {
 	userRepo *repository.UserRepository
 }
 
+// NewAuthService constructs a new AuthService with its dependencies.
 func NewAuthService() *AuthService {
 	return &AuthService{
 		userRepo: repository.NewUserRepository(),
 	}
 }
 
+// RegisterUser registers a new user, hashes the password and returns a JWT.
 func (as *AuthService) RegisterUser(regreq RegisterRequest) (*models.User, string, error) {
 	// check if email is taken
 	_, err := as.userRepo.GetUserByEmail(regreq.Email)
@@ -69,6 +73,7 @@ func (as *AuthService) RegisterUser(regreq RegisterRequest) (*models.User, strin
 	return user, token, nil
 }
 
+// LoginUser authenticates a user by email/password and returns a JWT on success.
 func (as *AuthService) LoginUser(logreq LoginRequest) (*models.User, string, error) {
 	// get user by email
 	user, err := as.userRepo.GetUserByEmail(logreq.Email)
@@ -91,6 +96,7 @@ func (as *AuthService) LoginUser(logreq LoginRequest) (*models.User, string, err
 	return user, token, nil
 }
 
+// GetAuthedUser fetches user details for the provided user ID.
 func (as *AuthService) GetAuthedUser(userID uuid.UUID) (*models.User, error) {
 	return as.userRepo.GetUserByID(userID)
 }
