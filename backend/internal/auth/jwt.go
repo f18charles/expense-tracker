@@ -14,7 +14,8 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-func GenarateToken(userID uuid.UUID) (string, error) {
+// GenerateToken creates a signed JWT for the provided user ID.
+func GenerateToken(userID uuid.UUID) (string, error) {
 	expiry := time.Duration(config.App.JWTExpiryMinutes) * time.Minute
 
 	claims := Claims{
@@ -36,7 +37,6 @@ func ValidateToken(tokenString string) (*Claims, error) {
 		}
 		return []byte(config.App.JWTSecret), nil
 	})
-
 	if err != nil {
 		return nil, err
 	}

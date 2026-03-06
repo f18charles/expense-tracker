@@ -41,7 +41,7 @@ func (as *AuthService) RegisterUser(regreq RegisterRequest) (*models.User, strin
 		return nil, "", err
 	}
 
-	//hash password
+	// hash password
 	passHash, err := auth.HashPassword(regreq.Password)
 	if err != nil {
 		return nil, "", err
@@ -61,7 +61,7 @@ func (as *AuthService) RegisterUser(regreq RegisterRequest) (*models.User, strin
 	}
 
 	// generate session token
-	token, err := auth.GenarateToken(user.ID)
+	token, err := auth.GenerateToken(user.ID)
 	if err != nil {
 		return nil, "", err
 	}
@@ -80,11 +80,11 @@ func (as *AuthService) LoginUser(logreq LoginRequest) (*models.User, string, err
 	}
 
 	// confirm password
-	if !auth.CheckPass(logreq.Password, user.PasswordHash) {
+	if !auth.CheckPassword(logreq.Password, user.PasswordHash) {
 		return nil, "", utils.ErrUnauthorized
 	}
 
-	token, err := auth.GenarateToken(user.ID)
+	token, err := auth.GenerateToken(user.ID)
 	if err != nil {
 		return nil, "", err
 	}
