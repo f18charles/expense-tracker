@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/f18charles/piggy-bank/backend/internal/auth"
 	"github.com/f18charles/piggy-bank/backend/internal/services"
 	"github.com/f18charles/piggy-bank/backend/internal/utils"
 	"github.com/gin-gonic/gin"
@@ -20,7 +21,11 @@ func NewAccHandler() *AccountHandler {
 }
 
 func (ach *AccountHandler) ListAccounts(c *gin.Context) {
-	id := utils.ConfirmAuthedUser(c)
+	id, err := auth.ConfirmAuthedUser(c)
+	if err != nil {
+		utils.ErrorResponse(c, http.StatusUnauthorized, err.Error())
+		return
+	}
 	accounts, err := ach.accountService.AccountList(id)
 	if err != nil {
 		utils.ErrorResponse(c, http.StatusNotFound, "no accounts found")
@@ -31,7 +36,11 @@ func (ach *AccountHandler) ListAccounts(c *gin.Context) {
 }
 
 func (ach *AccountHandler) CreateAccount(c *gin.Context) {
-	id := utils.ConfirmAuthedUser(c)
+	id, err := auth.ConfirmAuthedUser(c)
+	if err != nil {
+		utils.ErrorResponse(c, http.StatusUnauthorized, err.Error())
+		return
+	}
 	var accreq services.AccCreateRequest
 	if err := c.ShouldBindJSON(&accreq); err != nil {
 		utils.ErrorResponse(c, http.StatusBadRequest, err.Error())
@@ -46,7 +55,11 @@ func (ach *AccountHandler) CreateAccount(c *gin.Context) {
 }
 
 func (ach *AccountHandler) GetAccount(c *gin.Context) {
-	id := utils.ConfirmAuthedUser(c)
+	id, err := auth.ConfirmAuthedUser(c)
+	if err != nil {
+		utils.ErrorResponse(c, http.StatusUnauthorized, err.Error())
+		return
+	}
 	paramID := c.Param("id")
 	accountID, err := uuid.Parse(paramID)
 	if err != nil {
@@ -63,7 +76,11 @@ func (ach *AccountHandler) GetAccount(c *gin.Context) {
 }
 
 func (ach *AccountHandler) UpdateAccount(c *gin.Context) {
-	id := utils.ConfirmAuthedUser(c)
+	id, err := auth.ConfirmAuthedUser(c)
+	if err != nil {
+		utils.ErrorResponse(c, http.StatusUnauthorized, err.Error())
+		return
+	}
 
 	paramID := c.Param("id")
 	accountID, err := uuid.Parse(paramID)
@@ -89,12 +106,13 @@ func (ach *AccountHandler) UpdateAccount(c *gin.Context) {
 }
 
 func (ach *AccountHandler) DeleteAccount(c *gin.Context) {
-	userIDRaw, exists := c.Get("user_id")
-	if !exists {
-		utils.ErrorResponse(c, http.StatusUnauthorized, "unauthorized")
+	id, err := auth.ConfirmAuthedUser(c)
+	if err != nil {
+		utils.ErrorResponse(c, http.StatusUnauthorized, err.Error())
 		return
 	}
-	userID := userIDRaw.(uuid.UUID)
+
+	userID := id
 
 	paramID := c.Param("id")
 	accountID, err := uuid.Parse(paramID)

@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/f18charles/piggy-bank/backend/internal/auth"
 	"github.com/f18charles/piggy-bank/backend/internal/services"
 	"github.com/f18charles/piggy-bank/backend/internal/utils"
 	"github.com/gin-gonic/gin"
@@ -20,8 +21,9 @@ func NewGoalHandler() *GoalHandler {
 }
 
 func (gh *GoalHandler) ListGoals(c *gin.Context)  {
-	id := utils.ConfirmAuthedUser(c)
-	if id == uuid.Nil {
+	id, err := auth.ConfirmAuthedUser(c)
+	if err != nil {
+		utils.ErrorResponse(c, http.StatusUnauthorized, err.Error())
 		return
 	}
 	goal, err := gh.goalService.GoalList(id)
@@ -33,8 +35,9 @@ func (gh *GoalHandler) ListGoals(c *gin.Context)  {
 }
 
 func (gh *GoalHandler) CreateGoal(c *gin.Context) {
-	id := utils.ConfirmAuthedUser(c)
-	if id == uuid.Nil {
+	id, err := auth.ConfirmAuthedUser(c)
+	if err != nil {
+		utils.ErrorResponse(c, http.StatusUnauthorized, err.Error())
 		return
 	}
 	var goalreq services.GoalCreateRequest
@@ -51,8 +54,9 @@ func (gh *GoalHandler) CreateGoal(c *gin.Context) {
 }
 
 func (gh *GoalHandler) GetGoal(c *gin.Context) {
-	id := utils.ConfirmAuthedUser(c)
-	if id == uuid.Nil {
+	id, err := auth.ConfirmAuthedUser(c)
+	if err != nil {
+		utils.ErrorResponse(c, http.StatusUnauthorized, err.Error())
 		return
 	}
 	param_id := c.Param("id")
@@ -72,8 +76,9 @@ func (gh *GoalHandler) GetGoal(c *gin.Context) {
 }
 
 func (gh *GoalHandler) UpdateGoal(c *gin.Context) {
-	id := utils.ConfirmAuthedUser(c)
-	if id == uuid.Nil {
+	id, err := auth.ConfirmAuthedUser(c)
+	if err != nil {
+		utils.ErrorResponse(c, http.StatusUnauthorized, err.Error())
 		return
 	}
 	param_id := c.Param("id")
@@ -97,8 +102,9 @@ func (gh *GoalHandler) UpdateGoal(c *gin.Context) {
 }
 
 func (gh *GoalHandler) DeleteGoal(c *gin.Context) {
-	id := utils.ConfirmAuthedUser(c)
-	if id == uuid.Nil {
+	id, err := auth.ConfirmAuthedUser(c)
+	if err != nil {
+		utils.ErrorResponse(c, http.StatusUnauthorized, err.Error())
 		return
 	}
 	param_id := c.Param("id")
