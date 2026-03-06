@@ -24,6 +24,7 @@ func SetupRouter() *gin.Engine {
 	accountHandler := handlers.NewAccHandler()
 	txHandler := handlers.NewTxHandler()
 	goalHandler := handlers.NewGoalHandler()
+	budgetHandler := handlers.NewBudgetHandler()
 
 	// public routes
 	auth := v1.Group("/auth")
@@ -66,11 +67,11 @@ func SetupRouter() *gin.Engine {
 		protected.DELETE("/categories/:id", handlers.DeleteCategory)
 
 		// Budgets
-		protected.GET("/budgets", handlers.Listbudgets)
-		protected.POST("/budgets", handlers.CreateBudget)
-		protected.GET("/budgets/:id", handlers.GetBudget)
-		protected.PUT("/budgets/:id", handlers.UpdateBudget)
-		protected.DELETE("/budgets/:id", handlers.DeleteBudget)
+		protected.GET("/budgets", budgetHandler.Listbudgets)
+		protected.POST("/budgets", budgetHandler.CreateBudget)
+		protected.GET("/budgets/:id", budgetHandler.GetBudget)
+		protected.PUT("/budgets/:id", budgetHandler.UpdateBudget)
+		protected.DELETE("/budgets/:id", budgetHandler.DeleteBudget)
 
 		//	Goals
 		protected.GET("/goals", goalHandler.ListGoals)

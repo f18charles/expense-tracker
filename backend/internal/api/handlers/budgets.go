@@ -24,10 +24,12 @@ func (bh *BudgetHandler) Listbudgets(c *gin.Context)  {
 	id, err := auth.ConfirmAuthedUser(c)
 	if err != nil {
 		utils.ErrorResponse(c, http.StatusUnauthorized, err.Error())
+		return
 	}
 	budgets, err := bh.budgetService.BudgetList(id)
 	if err != nil {
 		utils.ErrorResponse(c, http.StatusNotFound, "no budgets found")
+		return
 	}
 	utils.SuccessResponse(c, http.StatusOK, budgets)
 }
@@ -36,14 +38,17 @@ func (bh *BudgetHandler) CreateBudget(c *gin.Context) {
 	id, err := auth.ConfirmAuthedUser(c)
 	if err != nil {
 		utils.ErrorResponse(c, http.StatusUnauthorized, err.Error())
+		return
 	}
 	var req services.BudgetCreateRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		utils.ErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
 	}
 	budget, err := bh.budgetService.BudgetCreate(id, req)
 	if err != nil {
 		utils.ErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
 	}
 	utils.SuccessResponse(c, http.StatusOK, budget)
 }
@@ -52,15 +57,18 @@ func (bh *BudgetHandler) GetBudget(c *gin.Context)    {
 	id, err := auth.ConfirmAuthedUser(c)
 	if err != nil {
 		utils.ErrorResponse(c, http.StatusUnauthorized, err.Error())
+		return
 	}
 	param_id := c.Param("id")
 	budget_id, err := uuid.Parse(param_id)
 	if err != nil {
 		utils.ErrorResponse(c, http.StatusBadRequest, "invalid budget id")
+		return
 	}
 	budget, err := bh.budgetService.BudgetGet(id, budget_id)
 	if err != nil {
 		utils.ErrorResponse(c, http.StatusNotFound, "budget not found")
+		return
 	}
 	utils.SuccessResponse(c, http.StatusOK, budget)
 }
@@ -69,15 +77,18 @@ func (bh *BudgetHandler) UpdateBudget(c *gin.Context) {
 	id, err := auth.ConfirmAuthedUser(c)
 	if err != nil {
 		utils.ErrorResponse(c, http.StatusUnauthorized, err.Error())
+		return
 	}
 	param_id := c.Param("id")
 	budget_id, err := uuid.Parse(param_id)
 	if err != nil {
 		utils.ErrorResponse(c, http.StatusBadRequest, "invalid budget id")
+		return
 	}
 	var req services.BudgetUpdateRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		utils.ErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
 	}
 	budget, err := bh.budgetService.BudgetUpdate(budget_id, id, req)
 	if err != nil {
@@ -88,7 +99,7 @@ func (bh *BudgetHandler) UpdateBudget(c *gin.Context) {
 }
 
 func (bh *BudgetHandler) DeleteBudget(c *gin.Context) {
-	id, err := auth.ConfirmAuthedUser(c)
+	_, err := auth.ConfirmAuthedUser(c)
 	if err != nil {
 		utils.ErrorResponse(c, http.StatusUnauthorized, err.Error())
 		return
