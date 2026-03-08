@@ -106,5 +106,5 @@ func (gs *GoalService) GoalDelete(user_id, goal_id uuid.UUID) error {
 	if goal.UserID != user_id {
 		return utils.ErrForbidden
 	}
-	return nil
+	return gs.goalRepo.DeleteGoal(goal_id)
 }

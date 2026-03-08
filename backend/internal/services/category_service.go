@@ -3,6 +3,7 @@ package services
 import (
 	"github.com/f18charles/piggy-bank/backend/internal/models"
 	"github.com/f18charles/piggy-bank/backend/internal/repository"
+	"github.com/f18charles/piggy-bank/backend/internal/utils"
 	"github.com/google/uuid"
 )
 
@@ -32,8 +33,8 @@ type CategoryUpdateRequest struct {
 	IsDefault bool `json:"is_default"`
 }
 
-func (cs *CategoryService) CategoryCreate(user_id uuid.UUID, req CategoryCreateRequest) error {
-	cat := models.Category{
+func (cs *CategoryService) CategoryCreate(user_id uuid.UUID, req CategoryCreateRequest) (*models.Category,error) {
+	cat := &models.Category{
 		UserID: user_id,
 		Name: req.Name,
 		Type: req.Type,
@@ -41,24 +42,58 @@ func (cs *CategoryService) CategoryCreate(user_id uuid.UUID, req CategoryCreateR
 		Icon: req.Icon,
 		IsDefault: req.IsDefault,
 	}
-	if err := cs.category_repo.CreateCategory(&cat); err != nil {
-		return err
+	if err := cs.category_repo.CreateCategory(cat); err != nil {
+		return nil, err
 	}
-	return nil
+	return cat,nil
 }
 
 func (cs *CategoryService) CategoryUpdate(user_id, cat_id uuid.UUID, req CategoryUpdateRequest) (*models.Category, error) {
+	cat, err := cs.category_repo.GetCategoryByID(cat_id)
+	if err != nil {
+		return nil, err
+	}
+	if cat.UserID != user_id {
+		return nil, utils.ErrForbidden
+	}
+	if req.Name != "" { cat.Name = req.Name}
+	if req.Type != "" { cat.Type = req.Type}
+	if req.Color != "" { cat.Color = req.Color}
+	if req.Icon != "" { cat.Icon = req.Icon}
+	if req.IsDefault != false { cat.IsDefault = req.IsDefault}
 
+	if err := cs.category_repo.UpdateCategory(cat); err != nil {
+		return nil, err
+	}
+	return cat, nil
 }
 
-func (cs *CategoryService) CategoryDelete(user_id, cat_id uuid.UUID) (*models.Category, error) {
-
+func (cs *CategoryService) CategoryDelete(user_id, cat_id uuid.UUID) error {
+	cat, err := cs.category_repo.GetCategoryByID(cat_id)
+	if err != nil {
+		return err
+	}
+	if cat.UserID != user_id {
+		return utils.ErrForbidden
+	}
+	return cs.category_repo.DeleteCategory(cat_id)
 }
 
 func (cs *CategoryService) CategoryList(user_id uuid.UUID) ([]models.Category, error) {
-
+	cats, err := cs.category_repo.ListCategory(user_id)
+	if err != nil {
+		return nil, err
+	}
+	return  cats, nil
 }
 
 func (cs *CategoryService) CategoryGet(user_id, cat_id uuid.UUID) (*models.Category, error) {
-
+	cat, err := cs.category_repo.GetCategoryByID(cat_id)
+	if err != nil {
+		return nil, err
+	}
+	if cat.UserID != user_id {
+		return nil, utils.ErrForbidden
+	}
+	return cat, nil
 }
