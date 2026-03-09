@@ -38,7 +38,7 @@ func (cr *CategoryRepo) UpdateCategory(cat *models.Category) error {
 
 func (cr *CategoryRepo) ListCategory(user_id uuid.UUID) ([]models.Category, error) {
 	cats := []models.Category{}
-	results := database.DB.Where("user_id = ?", user_id).Find(&cats)
+	results := database.DB.Where("user_id IS NULL OR user_id = ?", user_id).Find(&cats)
 	if results.Error != nil {
 		return nil,results.Error
 	}

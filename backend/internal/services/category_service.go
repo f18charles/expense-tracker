@@ -22,7 +22,6 @@ type CategoryCreateRequest struct {
 	Type string `json:"type" binding:"required"`
 	Color string `json:"color" binding:"required"`
 	Icon string `json:"icon" binding:"required"`
-	IsDefault bool `json:"is_default"`
 }
 
 type CategoryUpdateRequest struct {
@@ -30,7 +29,6 @@ type CategoryUpdateRequest struct {
 	Type string `json:"type"`
 	Color string `json:"color"`
 	Icon string `json:"icon"`
-	IsDefault bool `json:"is_default"`
 }
 
 func (cs *CategoryService) CategoryCreate(user_id uuid.UUID, req CategoryCreateRequest) (*models.Category,error) {
@@ -40,7 +38,7 @@ func (cs *CategoryService) CategoryCreate(user_id uuid.UUID, req CategoryCreateR
 		Type: req.Type,
 		Color: req.Color,
 		Icon: req.Icon,
-		IsDefault: req.IsDefault,
+		IsDefault: false,
 	}
 	if err := cs.category_repo.CreateCategory(cat); err != nil {
 		return nil, err
@@ -60,7 +58,6 @@ func (cs *CategoryService) CategoryUpdate(user_id, cat_id uuid.UUID, req Categor
 	if req.Type != "" { cat.Type = req.Type}
 	if req.Color != "" { cat.Color = req.Color}
 	if req.Icon != "" { cat.Icon = req.Icon}
-	if req.IsDefault != false { cat.IsDefault = req.IsDefault}
 
 	if err := cs.category_repo.UpdateCategory(cat); err != nil {
 		return nil, err
