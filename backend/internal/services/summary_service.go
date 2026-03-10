@@ -3,7 +3,6 @@ package services
 import (
 	"time"
 
-	"github.com/f18charles/piggy-bank/backend/internal/database"
 	"github.com/f18charles/piggy-bank/backend/internal/models"
 	"github.com/f18charles/piggy-bank/backend/internal/repository"
 	"github.com/f18charles/piggy-bank/backend/pkg/summary"
@@ -18,9 +17,9 @@ type SummaryService struct {
 	account_repo *repository.AccountRepo
 }
 
-func NewSummaryService() *SummaryService {
+func NewSummaryService(db *gorm.DB) *SummaryService {
 	return &SummaryService{
-		db:           database.DB,
+		db:           db,
 		tx_repo:      repository.NewTransactionRepo(),
 		budget_repo:  repository.NewBudgetRepo(),
 		account_repo: repository.NewAccountRepo(),
