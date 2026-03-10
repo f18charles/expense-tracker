@@ -118,15 +118,15 @@ func (s *SummaryService) GetMonthlySummary(userID uuid.UUID, year int, month tim
 
 // GetYearlySummary aggregates monthly summaries for a year
 func (s *SummaryService) GetYearlySummary(userID uuid.UUID, year int) ([]summary.MonthlySummary, error) {
-    var summaries []summary.MonthlySummary
-    
-    for month := time.January; month <= time.December; month++ {
-        summary, err := s.GetMonthlySummary(userID, year, month)
-        if err != nil {
-            continue // Skip months with no data
-        }
-        summaries = append(summaries, *summary)
-    }
-    
-    return summaries, nil
+	var summaries []summary.MonthlySummary
+
+	for month := time.January; month <= time.December; month++ {
+		summary, err := s.GetMonthlySummary(userID, year, month)
+		if err != nil {
+			continue // Skip months with no data
+		}
+		summaries = append(summaries, *summary)
+	}
+
+	return summaries, nil
 }
