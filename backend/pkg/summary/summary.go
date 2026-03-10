@@ -1,70 +1,37 @@
 package summary
 
 import (
+	"github.com/google/uuid"
 	"time"
+)
 
-	"github.com/f18charles/piggy-bank/backend/internal/models"
-	"gorm.io/gorm"
+type Period string
+
+const (
+	PeriodDaily   Period = "daily"
+	PeriodWeekly  Period = "weekly"
+	PeriodMonthly Period = "monthly"
+	PeriodYearly  Period = "yearly"
 )
 
 type MonthlySummary struct {
-	Month      time.Month
-	Year       int
-	OpeningBal float64
-	TotalExp   float64
-	CurrBal    float64
-	ByCategory map[*models.Category]float64
+	UserID        uuid.UUID                `json:"-"`
+	Year          int                      `json:"year"`
+	Month         time.Month               `json:"month"`
+	Income        float64                  `json:"income"`
+	Expenses      float64                  `json:"expenses"`
+	Savings       float64                  `json:"savings"`
+	SavingsRate   float64                  `json:"savings_rate"`
+	ByCategory    map[string]CategorySpend `json:"by_category"`
+	PreviousMonth *MonthlySummary          `json:"previous_month,omitempty"`
 }
 
-func GetMonthlySummary(db *gorm.DB, userID uint, month time.Month, year int) (MonthlySummary, error) {
-	start := time.Date(year, month, 1, 0, 0, 0, 0, time.UTC)
-	end := start.AddDate(0, 1, 0)
-
-	var txs []models.Transaction
-
-	err := db.Where("user_id=? AND date >= ? and date < ?", userID, start, end).Find(&txs).Error
-	if err != nil {
-		return MonthlySummary{}, err
-	}
-
-	summary := MonthlySummary{
-		Month:      month,
-		Year:       year,
-		ByCategory: make(map[*models.Category]float64),
-	}
-
-	var totalIncome float64
-	var totalExpense float64
-
-	for _, tx := range txs {
-		if tx.Type == "income" {
-			totalIncome += tx.Amount
-		} else {
-			totalExpense += tx.Amount
-			summary.ByCategory[tx.Category] += tx.Amount
-		}
-	}
-
-	var previousTxs []models.Transaction
-
-	err = db.Where("user_id = ? AND date < ?", userID, start).Find(&previousTxs).Error
-	if err != nil {
-		return MonthlySummary{}, err
-	}
-
-	var opening float64
-
-	for _, tx := range previousTxs {
-		if tx.Type == "income" {
-			opening += tx.Amount
-		} else {
-			opening -= tx.Amount
-		}
-	}
-
-	summary.OpeningBal = opening
-	summary.TotalExp = totalExpense
-	summary.CurrBal = (opening + totalIncome) - totalExpense
-
-	return summary, nil
+type CategorySpend struct {
+	CategoryID    uuid.UUID `json:"category_id"`
+	CategoryName  string    `json:"category_name"`
+	CategoryColor string    `json:"color"`
+	Spent         float64   `json:"spent"`
+	Budget        float64   `json:"budget,omitempty"`
+	Percentage    float64   `json:"percentage"`
+	Trend         float64   `json:"trend"`
 }

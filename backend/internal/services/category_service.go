@@ -18,32 +18,32 @@ func NewCategoryService() *CategoryService {
 }
 
 type CategoryCreateRequest struct {
-	Name string `json:"name" binding:"required"`
-	Type string `json:"type" binding:"required"`
+	Name  string `json:"name" binding:"required"`
+	Type  string `json:"type" binding:"required"`
 	Color string `json:"color" binding:"required"`
-	Icon string `json:"icon" binding:"required"`
+	Icon  string `json:"icon" binding:"required"`
 }
 
 type CategoryUpdateRequest struct {
-	Name string `json:"name"`
-	Type string `json:"type"`
+	Name  string `json:"name"`
+	Type  string `json:"type"`
 	Color string `json:"color"`
-	Icon string `json:"icon"`
+	Icon  string `json:"icon"`
 }
 
-func (cs *CategoryService) CategoryCreate(user_id uuid.UUID, req CategoryCreateRequest) (*models.Category,error) {
+func (cs *CategoryService) CategoryCreate(user_id uuid.UUID, req CategoryCreateRequest) (*models.Category, error) {
 	cat := &models.Category{
-		UserID: user_id,
-		Name: req.Name,
-		Type: req.Type,
-		Color: req.Color,
-		Icon: req.Icon,
+		UserID:    user_id,
+		Name:      req.Name,
+		Type:      req.Type,
+		Color:     req.Color,
+		Icon:      req.Icon,
 		IsDefault: false,
 	}
 	if err := cs.category_repo.CreateCategory(cat); err != nil {
 		return nil, err
 	}
-	return cat,nil
+	return cat, nil
 }
 
 func (cs *CategoryService) CategoryUpdate(user_id, cat_id uuid.UUID, req CategoryUpdateRequest) (*models.Category, error) {
@@ -54,10 +54,18 @@ func (cs *CategoryService) CategoryUpdate(user_id, cat_id uuid.UUID, req Categor
 	if cat.UserID != user_id {
 		return nil, utils.ErrForbidden
 	}
-	if req.Name != "" { cat.Name = req.Name}
-	if req.Type != "" { cat.Type = req.Type}
-	if req.Color != "" { cat.Color = req.Color}
-	if req.Icon != "" { cat.Icon = req.Icon}
+	if req.Name != "" {
+		cat.Name = req.Name
+	}
+	if req.Type != "" {
+		cat.Type = req.Type
+	}
+	if req.Color != "" {
+		cat.Color = req.Color
+	}
+	if req.Icon != "" {
+		cat.Icon = req.Icon
+	}
 
 	if err := cs.category_repo.UpdateCategory(cat); err != nil {
 		return nil, err
@@ -81,7 +89,7 @@ func (cs *CategoryService) CategoryList(user_id uuid.UUID) ([]models.Category, e
 	if err != nil {
 		return nil, err
 	}
-	return  cats, nil
+	return cats, nil
 }
 
 func (cs *CategoryService) CategoryGet(user_id, cat_id uuid.UUID) (*models.Category, error) {

@@ -68,7 +68,7 @@ func (ch *CategoryHandler) CreateCategory(c *gin.Context) {
 		utils.ErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	category, err := ch.categoryService.CategoryCreate(id,cat_req)
+	category, err := ch.categoryService.CategoryCreate(id, cat_req)
 	if err != nil {
 		utils.ErrorResponse(c, http.StatusInternalServerError, "failed to create category")
 		return
@@ -94,7 +94,7 @@ func (ch *CategoryHandler) UpdateCategory(c *gin.Context) {
 		utils.ErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	category, err := ch.categoryService.CategoryUpdate(id,cat_id,cat_up_req)
+	category, err := ch.categoryService.CategoryUpdate(id, cat_id, cat_up_req)
 	if err != nil {
 		utils.ErrorResponse(c, http.StatusInternalServerError, "failed to update category")
 		return
@@ -119,5 +119,5 @@ func (ch *CategoryHandler) DeleteCategory(c *gin.Context) {
 		utils.ErrorResponse(c, http.StatusInternalServerError, "failed to delete category")
 		return
 	}
-	utils.SuccessResponse(c, http.StatusOK, gin.H{"message":"Category deleted successfully"})
+	utils.SuccessResponse(c, http.StatusOK, gin.H{"message": "Category deleted successfully"})
 }
