@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/f18charles/piggy-bank/backend/internal/models"
+	"github.com/f18charles/piggy-bank/backend/internal/repository"
 	"github.com/f18charles/piggy-bank/backend/pkg/insights"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -12,11 +12,13 @@ import (
 
 type InsightsService struct {
 	db *gorm.DB
+	spendingInsightsRepo repository.SpendingInsightsRepo
 }
 
 func NewInsightsService(db *gorm.DB) *InsightsService {
 	return &InsightsService{
 		db: db,
+		spendingInsightsRepo: *repository.NewSpendingInsightsRepo(db),
 	}
 }
 
@@ -36,16 +38,11 @@ func (is *InsightsService) GetSpendingInsights(user_id uuid.UUID, days int) (*in
 	}
 
 	// get all expense txs in the period
-	type QueryResult struct {
-		models.Transaction
-		CategoryName string
+	results, err := is.spendingInsightsRepo.GetPeriodExpenses(user_id, start_date, end_date)
+	if err != nil {
+		return  nil, err
 	}
-
-	var results []QueryResult
-	if err := is.db.Table("transactions").Select("transactions.*, categories.name as category_name").Joins("LEFT JOIN categories ON transactions.category_id = categories.id").Where("transactions.user_id = ? AND transactions.type = ? AND transactions.transaction_date BETWEEN ? AND ?", user_id, "expense", start_date, end_date).Find(&results).Error; err != nil {
-		return nil, err
-	}
-
+	
 	if len(results) == 0 {
 		return the_insights, nil
 	}
