@@ -107,8 +107,13 @@ func (oh *OverviewHandler) Overview(c *gin.Context) {
 		utils.ErrorResponse(c, http.StatusUnauthorized, err.Error())
 		return
 	}
-
+	overview, err := oh.overviewService.GetDashboardOverview(id)
+	if err != nil {
+		utils.ErrorResponse(c, http.StatusInternalServerError, "failed to create overview")
+		return
+	}
 	
+	utils.SuccessResponse(c, http.StatusOK, overview)
 }
 
 // SpendingInsights returns insights and breakdowns for spending patterns.
@@ -118,4 +123,19 @@ func (sih *SpendingInsightsHandler) SpendingInsights(c *gin.Context) {
 		utils.ErrorResponse(c, http.StatusUnauthorized, err.Error())
 		return
 	}
+
+	days_param := c.Query("days")
+	days, err := strconv.Atoi(days_param)
+	if err != nil {
+		utils.ErrorResponse(c, http.StatusBadRequest, "please enter proper days")
+		return
+	}
+
+	spending_insights, err := sih.spendingInsightsService.GetSpendingInsights(id, days)
+	if err != nil {
+		utils.ErrorResponse(c, http.StatusInternalServerError, "failed to load spending insights")
+		return
+	}
+
+	utils.SuccessResponse(c, http.StatusOK, spending_insights)
 }
