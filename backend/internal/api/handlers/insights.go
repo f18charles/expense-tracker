@@ -1,7 +1,6 @@
 package handlers
 
 import (
-<<<<<<< HEAD
 	"net/http"
 	"strconv"
 	"time"
@@ -9,10 +8,6 @@ import (
 	"github.com/f18charles/piggy-bank/backend/internal/auth"
 	"github.com/f18charles/piggy-bank/backend/internal/services"
 	"github.com/f18charles/piggy-bank/backend/internal/utils"
-=======
-	"github.com/f18charles/piggy-bank/backend/internal/services"
-	"github.com/f18charles/piggy-bank/backend/pkg/summary"
->>>>>>> d97b3b9dd712861b36729cbff5c6686c1080ce19
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -27,7 +22,6 @@ func NewSummaryHandler(db *gorm.DB) *SummaryHandler {
 	}
 }
 
-<<<<<<< HEAD
 type OverviewHandler struct {
 	overviewService *services.OverviewService
 }
@@ -125,15 +119,3 @@ func (sih *SpendingInsightsHandler) SpendingInsights(c *gin.Context) {
 		return
 	}
 }
-=======
-// MonthlySummary returns aggregated monthly summary data for the user.
-func (sh *SummaryHandler) MonthlySummary(c *gin.Context) {
-
-}
-
-// Overview returns a high-level overview/dashboard for the user.
-func Overview(c *gin.Context) {}
-
-// SpendingInsights returns insights and breakdowns for spending patterns.
-func SpendingInsights(c *gin.Context) {}
->>>>>>> d97b3b9dd712861b36729cbff5c6686c1080ce19
