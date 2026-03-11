@@ -8,6 +8,7 @@ import (
 	"github.com/f18charles/piggy-bank/backend/internal/repository"
 	"github.com/f18charles/piggy-bank/backend/internal/utils"
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 // RegisterRequest is the payload for user registration.
@@ -28,9 +29,9 @@ type AuthService struct {
 }
 
 // NewAuthService constructs a new AuthService with its dependencies.
-func NewAuthService() *AuthService {
+func NewAuthService(db *gorm.DB) *AuthService {
 	return &AuthService{
-		userRepo: repository.NewUserRepository(),
+		userRepo: repository.NewUserRepository(db),
 	}
 }
 

@@ -11,6 +11,7 @@ import (
 	"github.com/f18charles/piggy-bank/backend/internal/utils"
 	"github.com/google/uuid"
 	gofpdf "github.com/jung-kurt/gofpdf"
+	"gorm.io/gorm"
 )
 
 type TxCreateRequest struct {
@@ -28,9 +29,9 @@ type TxService struct {
 }
 
 // NewTxService initializes and returns a TxService with its repository.
-func NewTxService() *TxService {
+func NewTxService(db *gorm.DB) *TxService {
 	return &TxService{
-		txRepo: repository.NewTransactionRepo(),
+		txRepo: repository.NewTransactionRepo(db),
 	}
 }
 

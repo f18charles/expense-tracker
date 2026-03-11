@@ -7,6 +7,7 @@ import (
 	"github.com/f18charles/piggy-bank/backend/internal/repository"
 	"github.com/f18charles/piggy-bank/backend/internal/utils"
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type GoalCreateRequest struct {
@@ -21,9 +22,9 @@ type GoalService struct {
 }
 
 // NewGoalService creates a GoalService with an initialized repository.
-func NewGoalService() *GoalService {
+func NewGoalService(db *gorm.DB) *GoalService {
 	return &GoalService{
-		goalRepo: repository.NewGoalRepo(),
+		goalRepo: repository.NewGoalRepo(db),
 	}
 }
 

@@ -24,10 +24,10 @@ func NewSummaryService(db *gorm.DB) *SummaryService {
 	return &SummaryService{
 		db:            db,
 		summaryRepo:   repository.NewSummaryRepo(db),
-		tx_repo:       repository.NewTransactionRepo(),
-		budget_repo:   repository.NewBudgetRepo(),
+		tx_repo:       repository.NewTransactionRepo(db),
+		budget_repo:   repository.NewBudgetRepo(db),
 		account_repo:  repository.NewAccountRepo(db),
-		category_repo: repository.NewCategoryRepo(),
+		category_repo: repository.NewCategoryRepo(db),
 	}
 }
 

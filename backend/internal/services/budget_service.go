@@ -7,6 +7,7 @@ import (
 	"github.com/f18charles/piggy-bank/backend/internal/repository"
 	"github.com/f18charles/piggy-bank/backend/internal/utils"
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type BudgetServices struct {
@@ -14,9 +15,9 @@ type BudgetServices struct {
 }
 
 // NewBudgetRepo creates and returns a BudgetServices instance with an initialized repository.
-func NewBudgetRepo() *BudgetServices {
+func NewBudgetRepo(db *gorm.DB) *BudgetServices {
 	return &BudgetServices{
-		budgetRepo: repository.NewBudgetRepo(),
+		budgetRepo: repository.NewBudgetRepo(db),
 	}
 }
 

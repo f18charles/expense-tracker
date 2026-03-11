@@ -5,6 +5,7 @@ import (
 	"github.com/f18charles/piggy-bank/backend/internal/repository"
 	"github.com/f18charles/piggy-bank/backend/internal/utils"
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type AccCreateRequest struct {
@@ -18,9 +19,9 @@ type AccountService struct {
 }
 
 // NewAccService constructs an AccountService with its repository dependency.
-func NewAccService() *AccountService {
+func NewAccService(db *gorm.DB) *AccountService {
 	return &AccountService{
-		accountRepo: repository.NewAccountRepo(),
+		accountRepo: repository.NewAccountRepo(db),
 	}
 }
 

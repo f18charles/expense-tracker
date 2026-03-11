@@ -22,9 +22,9 @@ func NewOverviewService(db *gorm.DB) *OverviewService {
 	return &OverviewService{
 		db:           db,
 		overviewRepo: *repository.NewOverviewRepo(db),
-		accountsRepo: *repository.NewAccountRepo(),
-		budgetsRepo:  *repository.NewBudgetRepo(),
-		goalsRepo:    *repository.NewGoalRepo(),
+		accountsRepo: *repository.NewAccountRepo(db),
+		budgetsRepo:  *repository.NewBudgetRepo(db),
+		goalsRepo:    *repository.NewGoalRepo(db),
 	}
 }
 

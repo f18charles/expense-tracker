@@ -5,15 +5,16 @@ import (
 	"github.com/f18charles/piggy-bank/backend/internal/repository"
 	"github.com/f18charles/piggy-bank/backend/internal/utils"
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type CategoryService struct {
 	category_repo *repository.CategoryRepo
 }
 
-func NewCategoryService() *CategoryService {
+func NewCategoryService(db *gorm.DB) *CategoryService {
 	return &CategoryService{
-		category_repo: repository.NewCategoryRepo(),
+		category_repo: repository.NewCategoryRepo(db),
 	}
 }
 
