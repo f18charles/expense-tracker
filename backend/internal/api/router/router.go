@@ -5,6 +5,7 @@ import (
 
 	"github.com/f18charles/piggy-bank/backend/internal/api/handlers"
 	"github.com/f18charles/piggy-bank/backend/internal/api/middleware"
+	"github.com/f18charles/piggy-bank/backend/internal/database"
 	"github.com/gin-gonic/gin"
 )
 
@@ -28,6 +29,9 @@ func SetupRouter() *gin.Engine {
 	goalHandler := handlers.NewGoalHandler()
 	budgetHandler := handlers.NewBudgetHandler()
 	categoryHandler := handlers.NewCategoryHandler()
+	summaryHandler := handlers.NewSummaryHandler(database.DB)
+	overviewHandler := handlers.NewOverviewHandler(database.DB)
+	spendingInsightsHandler := handlers.NewSpendingInsightsHandler(database.DB)
 
 	// public routes
 	auth := v1.Group("/auth")
@@ -84,9 +88,10 @@ func SetupRouter() *gin.Engine {
 		protected.DELETE("/goals/:id", goalHandler.DeleteGoal)
 
 		// Summary & Insights
-		protected.GET("/summary/monthly", handlers.MonthlySummary)
-		protected.GET("/summary/overview", handlers.Overview)
-		protected.GET("/summary/spending", handlers.SpendingInsights)
+		protected.GET("/insights/summary/monthly", summaryHandler.MonthlySummary)
+		protected.GET("/insights/summary/yearly", summaryHandler.MonthlySummary)
+		protected.GET("/insights/overview", overviewHandler.Overview)
+		protected.GET("/insights/spending", spendingInsightsHandler.SpendingInsights)
 
 		// Mpesa(authenticated)
 		protected.POST("/mpesa/stk-push", handlers.MpesaSTKPush)

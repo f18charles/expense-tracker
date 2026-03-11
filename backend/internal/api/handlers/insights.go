@@ -42,7 +42,6 @@ func NewSpendingInsightsHandler(db *gorm.DB) *SpendingInsightsHandler {
 	}
 }
 
-
 // MonthlySummary returns aggregated monthly summary data for the user.
 func (sh *SummaryHandler) MonthlySummary(c *gin.Context) {
 	id, err := auth.ConfirmAuthedUser(c)
@@ -61,7 +60,7 @@ func (sh *SummaryHandler) MonthlySummary(c *gin.Context) {
 	}
 
 	if month_par := c.Query("month"); month_par != "" {
-		if m, err := strconv.Atoi(month_par); err == nil && m >= 1 && m <= 12{
+		if m, err := strconv.Atoi(month_par); err == nil && m >= 1 && m <= 12 {
 			month = time.Month(m)
 		}
 	}
@@ -99,7 +98,6 @@ func (sh *SummaryHandler) YearlySummary(c *gin.Context) {
 	utils.SuccessResponse(c, http.StatusOK, yearly_summary)
 }
 
-
 // Overview returns a high-level overview/dashboard for the user.
 func (oh *OverviewHandler) Overview(c *gin.Context) {
 	id, err := auth.ConfirmAuthedUser(c)
@@ -112,7 +110,7 @@ func (oh *OverviewHandler) Overview(c *gin.Context) {
 		utils.ErrorResponse(c, http.StatusInternalServerError, "failed to create overview")
 		return
 	}
-	
+
 	utils.SuccessResponse(c, http.StatusOK, overview)
 }
 
