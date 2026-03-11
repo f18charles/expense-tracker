@@ -8,15 +8,16 @@ import (
 	"github.com/f18charles/piggy-bank/backend/internal/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type GoalHandler struct {
 	goalService services.GoalService
 }
 
-func NewGoalHandler() *GoalHandler {
+func NewGoalHandler(db *gorm.DB) *GoalHandler {
 	return &GoalHandler{
-		goalService: *services.NewGoalService(),
+		goalService: *services.NewGoalService(db),
 	}
 }
 

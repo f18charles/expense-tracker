@@ -23,15 +23,17 @@ func SetupRouter() *gin.Engine {
 	// API v1
 	v1 := r.Group("api/v1")
 
-	authHandler := handlers.NewAuthHandler()
-	accountHandler := handlers.NewAccHandler()
-	txHandler := handlers.NewTxHandler()
-	goalHandler := handlers.NewGoalHandler()
-	budgetHandler := handlers.NewBudgetHandler()
-	categoryHandler := handlers.NewCategoryHandler()
-	summaryHandler := handlers.NewSummaryHandler(database.DB)
-	overviewHandler := handlers.NewOverviewHandler(database.DB)
-	spendingInsightsHandler := handlers.NewSpendingInsightsHandler(database.DB)
+	db := database.DB
+
+	authHandler := handlers.NewAuthHandler(db)
+	accountHandler := handlers.NewAccHandler(db)
+	txHandler := handlers.NewTxHandler(db)
+	goalHandler := handlers.NewGoalHandler(db)
+	budgetHandler := handlers.NewBudgetHandler(db)
+	categoryHandler := handlers.NewCategoryHandler(db)
+	summaryHandler := handlers.NewSummaryHandler(db)
+	overviewHandler := handlers.NewOverviewHandler(db)
+	spendingInsightsHandler := handlers.NewSpendingInsightsHandler(db)
 
 	// public routes
 	auth := v1.Group("/auth")

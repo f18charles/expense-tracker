@@ -8,15 +8,16 @@ import (
 	"github.com/f18charles/piggy-bank/backend/internal/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type AuthHandler struct {
 	authService services.AuthService
 }
 
-func NewAuthHandler() *AuthHandler {
+func NewAuthHandler(db *gorm.DB) *AuthHandler {
 	return &AuthHandler{
-		authService: *services.NewAuthService(),
+		authService: *services.NewAuthService(db),
 	}
 }
 

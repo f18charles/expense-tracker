@@ -8,15 +8,16 @@ import (
 	"github.com/f18charles/piggy-bank/backend/internal/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type BudgetHandler struct {
 	budgetService services.BudgetServices
 }
 
-func NewBudgetHandler() *BudgetHandler {
+func NewBudgetHandler(db *gorm.DB) *BudgetHandler {
 	return &BudgetHandler{
-		budgetService: *services.NewBudgetRepo(),
+		budgetService: *services.NewBudgetRepo(db),
 	}
 }
 

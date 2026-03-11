@@ -8,15 +8,16 @@ import (
 	"github.com/f18charles/piggy-bank/backend/internal/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type CategoryHandler struct {
 	categoryService *services.CategoryService
 }
 
-func NewCategoryHandler() *CategoryHandler {
+func NewCategoryHandler(db *gorm.DB) *CategoryHandler {
 	return &CategoryHandler{
-		categoryService: services.NewCategoryService(),
+		categoryService: services.NewCategoryService(db),
 	}
 }
 
