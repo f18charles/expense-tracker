@@ -3,7 +3,8 @@ package services
 import (
 	"time"
 
-	"github.com/f18charles/piggy-bank/backend/internal/models"
+	"github.com/f18charles/piggy-bank/backend/internal/repository"
+	"github.com/f18charles/piggy-bank/backend/internal/utils"
 	"github.com/f18charles/piggy-bank/backend/pkg/overview"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -11,11 +12,19 @@ import (
 
 type OverviewService struct {
 	db *gorm.DB
+	overviewRepo repository.OverviewRepo
+	accountsRepo repository.AccountRepo
+	budgetsRepo repository.BudgetRepo
+	goalsRepo repository.GoalRepo
 }
 
 func NewOverviewService(db *gorm.DB) *OverviewService {
 	return &OverviewService{
 		db: db,
+		overviewRepo: *repository.NewOverviewRepo(db),
+		accountsRepo: *repository.NewAccountRepo(),
+		budgetsRepo: *repository.NewBudgetRepo(),
+		goalsRepo: *repository.NewGoalRepo(),
 	}
 }
 
@@ -25,9 +34,9 @@ func (os *OverviewService) GetDashboardOverview(user_id uuid.UUID) (*overview.Da
 	}
 
 	// get all accounts and networth
-	var accounts []models.Account
-	if err := os.db.Where("user_id = ?", user_id).Find(&accounts).Error; err != nil {
-		return nil, err
+	accounts, err := os.accountsRepo.ListAccountByUser(user_id)
+	if err != nil {
+		return nil, utils.ErrNotFound
 	}
 
 	for _, acc := range accounts {
@@ -45,13 +54,16 @@ func (os *OverviewService) GetDashboardOverview(user_id uuid.UUID) (*overview.Da
 	now := time.Now()
 	startOfMonth := time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, time.UTC)
 
-	var monthly_expenses float64
-	os.db.Model(&models.Transaction{}).Where("user_id = ? and type = ? and transaction_date = ?", user_id, "expense", startOfMonth).Select("COALESCE(SUM(amount), 0)").Scan(&monthly_expenses)
+	monthly_expenses, err := os.overviewRepo.GetMonthlyExpenses(user_id, startOfMonth)
+	if err != nil {
+		return nil, utils.ErrNotFound
+	}
+
 	over_view.MonthlyBurn = monthly_expenses
 
 	// get budget health
-	var budgets []models.Budget
-	if err := os.db.Preload("Category").Where("user_id = ?", user_id).Find(&budgets).Error; err != nil {
+	budgets, err := os.budgetsRepo.ListBudgetsByUser(user_id)
+	if err != nil {
 		return nil, err
 	}
 
@@ -74,9 +86,9 @@ func (os *OverviewService) GetDashboardOverview(user_id uuid.UUID) (*overview.Da
 	}
 
 	// get goals progress
-	var goals []models.Goal
-	if err := os.db.Where("user_id = ?", user_id).Find(&goals).Error; err != nil {
-		return nil, err
+	goals, err := os.goalsRepo.ListGoalsByUser(user_id)
+	if err != nil {
+		return nil, utils.ErrNotFound
 	}
 
 	for _, g := range goals {
@@ -91,7 +103,7 @@ func (os *OverviewService) GetDashboardOverview(user_id uuid.UUID) (*overview.Da
 		})
 	}
 
-	if err := os.db.Where("user_id = ?", user_id).Order("transaction_date DESC").Limit(5).Preload("Account").Preload("Category").Find(&over_view.RecentTx).Error; err != nil {
+	if err := os.overviewRepo.GetLatestTransactions(user_id, over_view); err != nil {
 		return nil, err
 	}
 

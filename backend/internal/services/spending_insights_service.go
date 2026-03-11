@@ -191,3 +191,5 @@ func (is *InsightsService) GetSpendingInsights(user_id uuid.UUID, days int) (*in
 func formatFloat(f float64) string {
 	return fmt.Sprintf("KES %v", f) // Use your currency formatter
 }
+
+//TODO: Later i will have this AI powered so that it can give better and more personalized feedback based on the users' spending habits
