@@ -12,20 +12,22 @@ import (
 )
 
 type SummaryService struct {
-	db           *gorm.DB
-	summaryRepo  *repository.SummaryRepo
-	tx_repo      *repository.TransactionRepo
-	budget_repo  *repository.BudgetRepo
-	account_repo *repository.AccountRepo
+	db            *gorm.DB
+	summaryRepo   *repository.SummaryRepo
+	tx_repo       *repository.TransactionRepo
+	budget_repo   *repository.BudgetRepo
+	account_repo  *repository.AccountRepo
+	category_repo *repository.CategoryRepo
 }
 
 func NewSummaryService(db *gorm.DB) *SummaryService {
 	return &SummaryService{
-		db:           db,
-		summaryRepo:  repository.NewSummaryRepo(db),
-		tx_repo:      repository.NewTransactionRepo(),
-		budget_repo:  repository.NewBudgetRepo(),
-		account_repo: repository.NewAccountRepo(),
+		db:            db,
+		summaryRepo:   repository.NewSummaryRepo(db),
+		tx_repo:       repository.NewTransactionRepo(),
+		budget_repo:   repository.NewBudgetRepo(),
+		account_repo:  repository.NewAccountRepo(db),
+		category_repo: repository.NewCategoryRepo(),
 	}
 }
 
@@ -49,7 +51,7 @@ func (s *SummaryService) GetMonthlySummary(user_id uuid.UUID, year int, month ti
 		budgetMap[b.CategoryID] = b.Amount
 	}
 
-	categories, err := s.summaryRepo.GetCategories(user_id)
+	categories, err := s.category_repo.ListCategory(user_id)
 	if err != nil {
 		return nil, utils.ErrNotFound
 	}

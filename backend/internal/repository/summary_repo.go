@@ -26,11 +26,3 @@ func (sr *SummaryRepo) GetTransactions(user_id uuid.UUID, start_date, end_date t
 	}
 	return transactions, nil
 }
-
-func (sr *SummaryRepo) GetCategories(user_id uuid.UUID) ([]models.Category, error) {
-	var categories []models.Category
-	if err := sr.db.Where("user_id = ? OR is_default = true", user_id).Find(&categories).Error; err != nil {
-		return nil, err
-	}
-	return categories, nil
-}

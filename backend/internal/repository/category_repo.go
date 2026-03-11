@@ -3,26 +3,29 @@ package repository
 import (
 	"errors"
 
-	"github.com/f18charles/piggy-bank/backend/internal/database"
 	"github.com/f18charles/piggy-bank/backend/internal/models"
 	"github.com/f18charles/piggy-bank/backend/internal/utils"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
-type CategoryRepo struct{}
+type CategoryRepo struct {
+	db *gorm.DB
+}
 
-func NewCategoryRepo() *CategoryRepo {
-	return &CategoryRepo{}
+func NewCategoryRepo(db *gorm.DB) *CategoryRepo {
+	return &CategoryRepo{
+		db: db,
+	}
 }
 
 func (cr *CategoryRepo) CreateCategory(cat *models.Category) error {
-	return database.DB.Create(cat).Error
+	return cr.db.Create(cat).Error
 }
 
 func (cr *CategoryRepo) GetCategoryByID(id uuid.UUID) (*models.Category, error) {
 	var cat models.Category
-	result := database.DB.Where("id = ?", id).First(&cat)
+	result := cr.db.Where("id = ?", id).First(&cat)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return nil, utils.ErrNotFound
@@ -33,12 +36,12 @@ func (cr *CategoryRepo) GetCategoryByID(id uuid.UUID) (*models.Category, error) 
 }
 
 func (cr *CategoryRepo) UpdateCategory(cat *models.Category) error {
-	return database.DB.Save(cat).Error
+	return cr.db.Save(cat).Error
 }
 
 func (cr *CategoryRepo) ListCategory(user_id uuid.UUID) ([]models.Category, error) {
 	cats := []models.Category{}
-	results := database.DB.Where("user_id IS NULL OR user_id = ?", user_id).Find(&cats)
+	results := cr.db.Where("user_id IS NULL OR user_id = ?", user_id).Find(&cats)
 	if results.Error != nil {
 		return nil, results.Error
 	}
@@ -46,7 +49,7 @@ func (cr *CategoryRepo) ListCategory(user_id uuid.UUID) ([]models.Category, erro
 }
 
 func (cr *CategoryRepo) DeleteCategory(id uuid.UUID) error {
-	result := database.DB.Delete(&models.Category{}, "id = ?", id)
+	result := cr.db.Delete(&models.Category{}, "id = ?", id)
 	if result.Error != nil {
 		return result.Error
 	}

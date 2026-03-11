@@ -3,22 +3,25 @@ package repository
 import (
 	"errors"
 
-	"github.com/f18charles/piggy-bank/backend/internal/database"
 	"github.com/f18charles/piggy-bank/backend/internal/models"
 	"github.com/f18charles/piggy-bank/backend/internal/utils"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
-type UserRepository struct{}
+type UserRepository struct {
+	db *gorm.DB
+}
 
-func NewUserRepository() *UserRepository {
-	return &UserRepository{}
+func NewUserRepository(db *gorm.DB) *UserRepository {
+	return &UserRepository{
+		db: db,
+	}
 }
 
 // CreateUser inserts a new user record into the database.
 func (ur *UserRepository) CreateUser(user *models.User) error {
-	result := database.DB.Create(user)
+	result := ur.db.Create(user)
 	return result.Error
 }
 
@@ -26,7 +29,7 @@ func (ur *UserRepository) CreateUser(user *models.User) error {
 // the user does not exist.
 func (ur *UserRepository) GetUserByEmail(email string) (*models.User, error) {
 	var user models.User
-	result := database.DB.Where("email = ?", email).First(&user)
+	result := ur.db.Where("email = ?", email).First(&user)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return nil, utils.ErrNotFound
@@ -40,7 +43,7 @@ func (ur *UserRepository) GetUserByEmail(email string) (*models.User, error) {
 // not present.
 func (ur *UserRepository) GetUserByID(id uuid.UUID) (*models.User, error) {
 	var user models.User
-	result := database.DB.Where("id = ?", id).First(&user)
+	result := ur.db.Where("id = ?", id).First(&user)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return nil, utils.ErrNotFound
@@ -52,6 +55,6 @@ func (ur *UserRepository) GetUserByID(id uuid.UUID) (*models.User, error) {
 
 // UpdateUser updates an existing user record in the database.
 func (ur *UserRepository) UpdateUser(user *models.User) error {
-	result := database.DB.Save(user)
+	result := ur.db.Save(user)
 	return result.Error
 }

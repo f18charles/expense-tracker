@@ -11,20 +11,20 @@ import (
 )
 
 type OverviewService struct {
-	db *gorm.DB
+	db           *gorm.DB
 	overviewRepo repository.OverviewRepo
 	accountsRepo repository.AccountRepo
-	budgetsRepo repository.BudgetRepo
-	goalsRepo repository.GoalRepo
+	budgetsRepo  repository.BudgetRepo
+	goalsRepo    repository.GoalRepo
 }
 
 func NewOverviewService(db *gorm.DB) *OverviewService {
 	return &OverviewService{
-		db: db,
+		db:           db,
 		overviewRepo: *repository.NewOverviewRepo(db),
 		accountsRepo: *repository.NewAccountRepo(),
-		budgetsRepo: *repository.NewBudgetRepo(),
-		goalsRepo: *repository.NewGoalRepo(),
+		budgetsRepo:  *repository.NewBudgetRepo(),
+		goalsRepo:    *repository.NewGoalRepo(),
 	}
 }
 

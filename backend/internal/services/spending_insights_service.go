@@ -11,13 +11,13 @@ import (
 )
 
 type InsightsService struct {
-	db *gorm.DB
+	db                   *gorm.DB
 	spendingInsightsRepo repository.SpendingInsightsRepo
 }
 
 func NewInsightsService(db *gorm.DB) *InsightsService {
 	return &InsightsService{
-		db: db,
+		db:                   db,
 		spendingInsightsRepo: *repository.NewSpendingInsightsRepo(db),
 	}
 }
@@ -40,9 +40,9 @@ func (is *InsightsService) GetSpendingInsights(user_id uuid.UUID, days int) (*in
 	// get all expense txs in the period
 	results, err := is.spendingInsightsRepo.GetPeriodExpenses(user_id, start_date, end_date)
 	if err != nil {
-		return  nil, err
+		return nil, err
 	}
-	
+
 	if len(results) == 0 {
 		return the_insights, nil
 	}
